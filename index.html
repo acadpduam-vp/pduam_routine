@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDUAM Class Routine</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f7fb;
+      color: #172033;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background: linear-gradient(135deg, #123b70, #1f6fb2);
+      color: #ffffff;
+      padding: 30px 20px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0 0 8px;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.9;
+    }
+
+    main {
+      max-width: 1400px;
+      margin: 28px auto;
+      padding: 0 16px 32px;
+    }
+
+    .view-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .view-buttons button {
+      width: auto;
+      padding: 0 20px;
+      background: #dbeafe;
+      color: #123b70;
+    }
+
+    .view-buttons button.active {
+      background: #1f6fb2;
+      color: #ffffff;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      background: #ffffff;
+      padding: 18px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
+      margin-bottom: 22px;
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      min-height: 42px;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    input,
+    select {
+      border: 1px solid #cbd5e1;
+      padding: 0 12px;
+      background: #ffffff;
+      color: #172033;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #1f6fb2;
+      box-shadow: 0 0 0 3px rgba(31, 111, 178, 0.16);
+      outline: none;
+    }
+
+    button {
+      border: 0;
+      background: #1f6fb2;
+      color: #ffffff;
+      cursor: pointer;
+      font-weight: bold;
+      padding: 0 14px;
+    }
+
+    button:hover {
+      background: #15578e;
+    }
+
+    .summary {
+      margin: 8px 2px 14px;
+      color: #536174;
+      font-size: 14px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
+      margin-bottom: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: #eaf2fb;
+      color: #123b70;
+      text-align: left;
+      padding: 13px 14px;
+      font-size: 14px;
+    }
+
+    td {
+      border-top: 1px solid #e5eaf0;
+      padding: 13px 14px;
+      font-size: 14px;
+      vertical-align: top;
+    }
+
+    tr:hover td {
+      background: #f8fbff;
+    }
+
+    .empty,
+    .loading {
+      padding: 30px;
+      text-align: center;
+      color: #6b7280;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .overall-table-wrapper {
+      overflow-x: auto;
+    }
+
+    .overall-table {
+      min-width: 1200px;
+    }
+
+    .overall-table th {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .overall-table td {
+      min-width: 135px;
+      text-align: center;
+    }
+
+    .overall-day-cell {
+      background: #f8fbff;
+      color: #123b70;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .overall-class-cell {
+      min-width: 180px !important;
+      text-align: left !important;
+      line-height: 1.45;
+    }
+
+    .overall-subject-cell {
+      color: #172033;
+      font-weight: 600;
+      line-height: 1.4;
+    }
+
+    .overall-empty {
+      color: #9aa7b8;
+    }
+
+    @media (max-width: 760px) {
+      .filters {
+        grid-template-columns: 1fr;
+      }
+
+      .view-buttons {
+        flex-direction: column;
+      }
+
+      .view-buttons button {
+        width: 100%;
+      }
+
+      header h1 {
+        font-size: 23px;
+      }
+
+      .card {
+        overflow-x: auto;
+      }
+
+      table {
+        min-width: 640px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>PDUAM Class Routine</h1>
+    <p>Search, filter, and view the complete class schedule</p>
+  </header>
+
+  <main>
+    <div class="view-buttons">
+      <button
+        id="filteredViewButton"
+        class="active"
+        onclick="showFilteredView()"
+      >
+        Filtered View
+      </button>
+
+      <button
+        id="overallViewButton"
+        onclick="showOverallView()"
+      >
+        Overall View
+      </button>
+    </div>
+
+    <section id="filteredSection">
+      <section class="filters">
+        <select id="streamFilter" onchange="renderTable()">
+          <option value="">All Streams</option>
+        </select>
+
+        <select id="dayFilter" onchange="renderTable()">
+          <option value="">All Days</option>
+        </select>
+
+        <select id="classFilter" onchange="renderTable()">
+          <option value="">All Classes</option>
+        </select>
+
+        <select id="timeFilter" onchange="renderTable()">
+          <option value="">All Time Slots</option>
+        </select>
+
+        <input
+          id="searchFilter"
+          type="search"
+          placeholder="Search subject or time"
+          oninput="renderTable()"
+        >
+
+        <button onclick="clearFilters()">Clear filters</button>
+      </section>
+
+      <div id="summary" class="summary">Loading routine…</div>
+
+      <section class="card">
+        <div id="tableContainer" class="loading">
+          Loading routine data…
+        </div>
+      </section>
+    </section>
+
+    <section id="overallSection" class="hidden">
+      <div class="summary">
+        Complete routine: Day, Class, and subjects by time slot
+      </div>
+
+      <div id="overallContainer">
+        <div class="loading">Loading overall view…</div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ---- CONFIG: your Google Sheet ----
+    const SHEET_ID = '1LA8RyTCExRt50IBV6gIS6F6LzJ5gF4Ev1VeFegDLf4o';
+    const SHEET_GID = '1084020770'; // the "Routine" tab
+    const DATA_URL =
+      'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
+      '/gviz/tq?tqx=out:json&gid=' + SHEET_GID;
+
+    let routine = [];
+
+    const dayOrder = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday'
+    ];
+
+    const timeOrder = [
+      '9 AM–10 AM',
+      '10 AM–11 AM',
+      '11 AM–12 PM',
+      '12 PM–1 PM',
+      '1 PM–2 PM',
+      '2 PM–3 PM',
+      '3 PM–4 PM'
+    ];
+
+    const classOrder = [
+      'HS 1st Year',
+      'HS 2nd Year',
+
+      'BA 1st Semester',
+      'BSc 1st Semester',
+
+
+      'BA 3rd Semester',
+      'BSc 3rd Semester',
+
+
+      'BA 5th Semester',
+      'BSc 5th Semester'
+
+    ];
+
+    // Fetch and parse the Google Sheet's gviz JSON feed
+    function loadRoutineData() {
+      fetch(DATA_URL)
+        .then(function(response) {
+          if (!response.ok) {
+            throw new Error('Network response was not ok (' + response.status + ')');
+          }
+          return response.text();
+        })
+        .then(function(text) {
+          routine = parseGvizResponse(text);
+          populateFilters();
+          renderTable();
+          renderOverallView();
+        })
+        .catch(function(error) {
+          document.getElementById('summary').textContent =
+            'Unable to load routine data.';
+
+          document.getElementById('tableContainer').innerHTML =
+            '<div class="empty">Could not load the routine. Make sure the Google Sheet is shared as "Anyone with the link – Viewer", then refresh.</div>';
+
+          document.getElementById('overallContainer').innerHTML =
+            '<div class="empty">Could not load the overall routine.</div>';
+
+          console.error(error);
+        });
+    }
+
+    // Google's gviz endpoint wraps JSON in a JS callback like:
+    // google.visualization.Query.setResponse({...});
+    function parseGvizResponse(text) {
+      const start = text.indexOf('{');
+      const end = text.lastIndexOf('}');
+      const json = JSON.parse(text.substring(start, end + 1));
+
+      const cols = json.table.cols.map(function(col) {
+        return col.label || col.id;
+      });
+
+      const rows = json.table.rows || [];
+
+      return rows
+        .map(function(row) {
+          const record = {};
+
+          cols.forEach(function(colName, index) {
+            const cell = row.c[index];
+            const value = cell
+              ? (cell.f !== undefined && cell.f !== null ? cell.f : cell.v)
+              : '';
+
+            record[colName] = value === null || value === undefined
+              ? ''
+              : String(value);
+          });
+
+          return record;
+        })
+        .filter(function(record) {
+          return Object.values(record).some(function(value) {
+            return value !== '';
+          });
+        });
+    }
+
+    function getOrderIndex(order, value) {
+      const index = order.indexOf(value);
+      return index === -1 ? 9999 : index;
+    }
+
+    function getUniqueValues(column) {
+      const values = [...new Set(
+        routine
+          .map(function(row) {
+            return row[column];
+          })
+          .filter(function(value) {
+            return value && String(value).trim() !== '';
+          })
+      )];
+
+      if (column === 'Day') {
+        return values.sort(function(a, b) {
+          return getOrderIndex(dayOrder, a) - getOrderIndex(dayOrder, b);
+        });
+      }
+
+      if (column === 'Time') {
+        return values.sort(function(a, b) {
+          return getOrderIndex(timeOrder, a) - getOrderIndex(timeOrder, b);
+        });
+      }
+
+      if (column === 'Class') {
+        return values.sort(function(a, b) {
+          const indexA = getOrderIndex(classOrder, a);
+          const indexB = getOrderIndex(classOrder, b);
+
+          if (indexA !== indexB) {
+            return indexA - indexB;
+          }
+
+          return a.localeCompare(b, undefined, {
+            numeric: true,
+            sensitivity: 'base'
+          });
+        });
+      }
+
+      return values.sort(function(a, b) {
+        return a.localeCompare(b, undefined, {
+          numeric: true,
+          sensitivity: 'base'
+        });
+      });
+    }
+
+    function fillSelect(id, column) {
+      const select = document.getElementById(id);
+
+      getUniqueValues(column).forEach(function(value) {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        select.appendChild(option);
+      });
+    }
+
+    function populateFilters() {
+      fillSelect('streamFilter', 'Stream');
+      fillSelect('dayFilter', 'Day');
+      fillSelect('classFilter', 'Class');
+      fillSelect('timeFilter', 'Time');
+    }
+
+    function compareRoutineRows(a, b) {
+      const dayDifference =
+        getOrderIndex(dayOrder, a['Day']) -
+        getOrderIndex(dayOrder, b['Day']);
+
+      if (dayDifference !== 0) {
+        return dayDifference;
+      }
+
+      const classDifference =
+        getOrderIndex(classOrder, a['Class']) -
+        getOrderIndex(classOrder, b['Class']);
+
+      if (classDifference !== 0) {
+        return classDifference;
+      }
+
+      const streamDifference = String(a['Stream']).localeCompare(
+        String(b['Stream']),
+        undefined,
+        { numeric: true, sensitivity: 'base' }
+      );
+
+      if (streamDifference !== 0) {
+        return streamDifference;
+      }
+
+      return getOrderIndex(timeOrder, a['Time']) -
+        getOrderIndex(timeOrder, b['Time']);
+    }
+
+    function renderTable() {
+      const stream = document.getElementById('streamFilter').value;
+      const day = document.getElementById('dayFilter').value;
+      const className = document.getElementById('classFilter').value;
+      const time = document.getElementById('timeFilter').value;
+      const search = document.getElementById('searchFilter').value
+        .toLowerCase()
+        .trim();
+
+      const filtered = routine
+        .filter(function(row) {
+          const matchesStream = !stream || row['Stream'] === stream;
+          const matchesDay = !day || row['Day'] === day;
+          const matchesClass = !className || row['Class'] === className;
+          const matchesTime = !time || row['Time'] === time;
+
+          const searchText = [
+            row['Subject'],
+            row['Time'],
+            row['Day'],
+            row['Stream'],
+            row['Class'],
+            row['Period No']
+          ].join(' ').toLowerCase();
+
+          const matchesSearch = !search || searchText.includes(search);
+
+          return matchesStream &&
+            matchesDay &&
+            matchesClass &&
+            matchesTime &&
+            matchesSearch;
+        })
+        .sort(compareRoutineRows);
+
+      document.getElementById('summary').textContent =
+        filtered.length +
+        ' routine record' +
+        (filtered.length === 1 ? '' : 's') +
+        ' found';
+
+      if (filtered.length === 0) {
+        document.getElementById('tableContainer').innerHTML =
+          '<div class="empty">No routine matches the selected filters.</div>';
+        return;
+      }
+
+      const rows = filtered.map(function(row) {
+        return `
+          <tr>
+            <td>${escapeHtml(row['Stream'])}</td>
+            <td>${escapeHtml(row['Day'])}</td>
+            <td>${escapeHtml(row['Class'])}</td>
+            <td>${escapeHtml(row['Time'])}</td>
+            <td>${escapeHtml(row['Subject'])}</td>
+            <td>${escapeHtml(row['Period No'])}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('tableContainer').innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Stream</th>
+              <th>Day</th>
+              <th>Class</th>
+              <th>Time</th>
+              <th>Subject</th>
+              <th>Period</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function renderOverallView() {
+      const sorted = [...routine].sort(compareRoutineRows);
+
+      if (!sorted.length) {
+        document.getElementById('overallContainer').innerHTML =
+          '<div class="empty">No routine data found.</div>';
+        return;
+      }
+
+      const days = [...new Set(
+        sorted.map(function(row) {
+          return row['Day'];
+        })
+      )].sort(function(a, b) {
+        return getOrderIndex(dayOrder, a) - getOrderIndex(dayOrder, b);
+      });
+
+      const times = [...new Set(
+        sorted.map(function(row) {
+          return row['Time'];
+        })
+      )].sort(function(a, b) {
+        return getOrderIndex(timeOrder, a) - getOrderIndex(timeOrder, b);
+      });
+
+      const classGroups = [...new Set(
+        sorted.map(function(row) {
+          return row['Stream'] + '|||' + row['Class'];
+        })
+      )].sort(function(a, b) {
+        const partsA = a.split('|||');
+        const partsB = b.split('|||');
+
+        const streamA = partsA[0];
+        const classA = partsA[1];
+        const streamB = partsB[0];
+        const classB = partsB[1];
+
+        const classDifference =
+          getOrderIndex(classOrder, classA) -
+          getOrderIndex(classOrder, classB);
+
+        if (classDifference !== 0) {
+          return classDifference;
+        }
+
+        return streamA.localeCompare(streamB, undefined, {
+          numeric: true,
+          sensitivity: 'base'
+        });
+      });
+
+      const headerCells = times.map(function(time) {
+        return `<th>${escapeHtml(time)}</th>`;
+      }).join('');
+
+      let rows = '';
+
+      days.forEach(function(day) {
+        classGroups.forEach(function(group) {
+          const parts = group.split('|||');
+          const stream = parts[0];
+          const className = parts[1];
+
+          const timeCells = times.map(function(time) {
+            const matchingRows = sorted.filter(function(row) {
+              return row['Day'] === day &&
+                row['Stream'] === stream &&
+                row['Class'] === className &&
+                row['Time'] === time;
+            });
+
+            if (matchingRows.length === 0) {
+              return '<td class="overall-empty">—</td>';
+            }
+
+            const subjects = matchingRows.map(function(row) {
+              return `
+                <div class="overall-subject-cell">
+                  ${escapeHtml(row['Subject'])}
+                </div>
+              `;
+            }).join('');
+
+            return `<td>${subjects}</td>`;
+          }).join('');
+
+          rows += `
+            <tr>
+              <td class="overall-day-cell">
+                ${escapeHtml(day)}
+              </td>
+
+              <td class="overall-class-cell">
+                <strong>${escapeHtml(stream)}</strong><br>
+                ${escapeHtml(className)}
+              </td>
+
+              ${timeCells}
+            </tr>
+          `;
+        });
+      });
+
+      document.getElementById('overallContainer').innerHTML = `
+        <section class="card overall-table-wrapper">
+          <table class="overall-table">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Class</th>
+                ${headerCells}
+              </tr>
+            </thead>
+            <tbody>
+              ${rows}
+            </tbody>
+          </table>
+        </section>
+      `;
+    }
+
+    function showFilteredView() {
+      document.getElementById('filteredSection').classList.remove('hidden');
+      document.getElementById('overallSection').classList.add('hidden');
+
+      document.getElementById('filteredViewButton').classList.add('active');
+      document.getElementById('overallViewButton').classList.remove('active');
+    }
+
+    function showOverallView() {
+      document.getElementById('filteredSection').classList.add('hidden');
+      document.getElementById('overallSection').classList.remove('hidden');
+
+      document.getElementById('filteredViewButton').classList.remove('active');
+      document.getElementById('overallViewButton').classList.add('active');
+
+      renderOverallView();
+    }
+
+    function clearFilters() {
+      document.getElementById('streamFilter').value = '';
+      document.getElementById('dayFilter').value = '';
+      document.getElementById('classFilter').value = '';
+      document.getElementById('timeFilter').value = '';
+      document.getElementById('searchFilter').value = '';
+
+      renderTable();
+    }
+
+    function escapeHtml(value) {
+      const text = String(
+        value === undefined || value === null ? '' : value
+      );
+
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    loadRoutineData();
+  </script>
+</body>
+</html>
