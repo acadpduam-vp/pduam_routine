@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>PDUAM Class Routine</title>
+  <title>PDUAM Class Routine — Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya</title>
 
   <style>
     * {
@@ -20,18 +20,70 @@
     header {
       background: linear-gradient(135deg, #123b70, #1f6fb2);
       color: #ffffff;
-      padding: 30px 20px;
+      padding: 26px 20px;
       text-align: center;
     }
 
-    header h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
     }
 
-    header p {
-      margin: 0;
+    .header-logo {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 50%;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    .header-text {
+      text-align: left;
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .header-subtitle {
+      margin: 0 0 2px;
       opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .header-tagline {
+      margin: 0;
+      opacity: 0.85;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+
+      .header-text {
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 19px;
+      }
+
+      .header-logo {
+        width: 52px;
+        height: 52px;
+      }
     }
 
     main {
@@ -282,8 +334,14 @@
 
 <body>
   <header>
-    <h1>PDUAM Class Routine</h1>
-    <p>Search, filter, and view the complete class schedule</p>
+    <div class="header-inner">
+      <img src="rusa.jfif" alt="RUSA logo" class="header-logo">
+      <div class="header-text">
+        <h1>Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya</h1>
+        <p class="header-subtitle">Amjonga, Goalpara, Assam &middot; Affiliated to Gauhati University</p>
+        <p class="header-tagline">Class Routine, Holidays &amp; Personal Schedule</p>
+      </div>
+    </div>
   </header>
 
   <main>
