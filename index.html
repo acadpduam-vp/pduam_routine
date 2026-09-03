@@ -196,6 +196,22 @@
       color: #9aa7b8;
     }
 
+    .holiday-filters {
+      grid-template-columns: minmax(0, 260px);
+    }
+
+    .holiday-heading {
+      margin: 18px 2px 10px;
+      color: #123b70;
+      font-size: 17px;
+    }
+
+    .holiday-note {
+      margin: -4px 2px 12px;
+      color: #6b7280;
+      font-size: 13px;
+    }
+
     @media (max-width: 760px) {
       .filters {
         grid-template-columns: 1fr;
@@ -246,6 +262,13 @@
       >
         Overall View
       </button>
+
+      <button
+        id="holidayViewButton"
+        onclick="showHolidayView()"
+      >
+        GU Holidays
+      </button>
     </div>
 
     <section id="filteredSection">
@@ -293,6 +316,29 @@
       <div id="overallContainer">
         <div class="loading">Loading overall view…</div>
       </div>
+    </section>
+
+    <section id="holidaySection" class="hidden">
+      <section class="filters holiday-filters">
+        <select id="holidayMonthFilter" onchange="renderHolidays()">
+          <option value="">All Months</option>
+        </select>
+      </section>
+
+      <div id="holidaySummary" class="summary"></div>
+
+      <h3 class="holiday-heading">Holidays</h3>
+      <section class="card">
+        <div id="holidayTableContainer"></div>
+      </section>
+
+      <h3 class="holiday-heading">Restricted Holidays</h3>
+      <p class="holiday-note">
+        Each employee may avail any 3 of the following as restricted holidays, with prior approval.
+      </p>
+      <section class="card">
+        <div id="restrictedHolidayTableContainer"></div>
+      </section>
     </section>
   </main>
 
@@ -342,6 +388,141 @@
       'BSc 5th Semester'
 
     ];
+
+    // ---- GU Holiday List for 2026 (Office of the Registrar, GU) ----
+    const monthOrder = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+
+    const holidays = [
+      { occasion: 'Magh Bihu', month: 'January', dates: '13, 14 & 15', days: 'Tuesday, Wednesday & Thursday', count: 3 },
+      { occasion: 'Saraswati Puja', month: 'January', dates: '23', days: 'Friday', count: 1 },
+      { occasion: 'Republic Day / G.U. Foundation Day', month: 'January', dates: '26', days: 'Monday', count: 1 },
+      { occasion: 'Gwther Bathau San', month: 'January', dates: '27', days: 'Tuesday', count: 1 },
+      { occasion: 'Me-Dam-Me-phi', month: 'January', dates: '31', days: 'Saturday', count: 1 },
+      { occasion: 'Bir Chilaray Divas', month: 'February', dates: '1', days: 'Sunday', count: 1 },
+      { occasion: 'Sivaratri', month: 'February', dates: '15', days: 'Sunday', count: 1 },
+      { occasion: 'Khring Khring Baithow Puja', month: 'March', dates: '2', days: 'Monday', count: 1 },
+      { occasion: 'Dol Jatra', month: 'March', dates: '3', days: 'Tuesday', count: 1 },
+      { occasion: 'Id-Ul-Fitre', month: 'March', dates: '21 & 22', days: 'Saturday & Sunday', count: 2 },
+      { occasion: 'Good Friday', month: 'April', dates: '3', days: 'Friday', count: 1 },
+      { occasion: 'Bohag Bihu', month: 'April', dates: '14, 15 & 16', days: 'Tuesday, Wednesday & Thursday', count: 3 },
+      { occasion: 'May Day / Buddha Purnima', month: 'May', dates: '1', days: 'Friday', count: 1 },
+      { occasion: 'Id-Uz-Zuha', month: 'May', dates: '27 & 28', days: 'Wednesday & Thursday', count: 2 },
+      { occasion: 'Independence Day', month: 'August', dates: '15', days: 'Saturday', count: 1 },
+      { occasion: 'Tirubhav Tithi of Sri Sri Madhabdeva', month: 'September', dates: '1', days: 'Tuesday', count: 1 },
+      { occasion: 'Janmastomi', month: 'September', dates: '4', days: 'Friday', count: 1 },
+      { occasion: 'Tirubhav Tithi of Sri Sri Sankardev', month: 'September', dates: '12', days: 'Saturday', count: 1 },
+      { occasion: 'Janmostav of Sri Sri Sankardev', month: 'September', dates: '21', days: 'Monday', count: 1 },
+      { occasion: 'Birthday of Mahatma Gandhi', month: 'October', dates: '2', days: 'Friday', count: 1 },
+      { occasion: 'Durga Puja, Kati Bihu & Lakhsmi Puja', month: 'October', dates: '17 to 25', days: 'Saturday to Sunday', count: 9 },
+      { occasion: 'Kali Puja & Dipawali', month: 'November', dates: '8', days: 'Sunday', count: 1 },
+      { occasion: "Guru Nanak's Birthday & Lachit Divas", month: 'November', dates: '24', days: 'Tuesday', count: 1 },
+      { occasion: 'Asom Divas (Su-ka-Pha Divas)', month: 'December', dates: '2', days: 'Wednesday', count: 1 },
+      { occasion: 'Christmas Day', month: 'December', dates: '25', days: 'Friday', count: 1 }
+    ];
+
+    const restrictedHolidays = [
+      { occasion: "New Year's Day", month: 'January', dates: '1', days: 'Thursday', count: 1 },
+      { occasion: 'Silpi Divas', month: 'January', dates: '17', days: 'Saturday', count: 1 },
+      { occasion: 'Shab-E-Barat', month: 'February', dates: '4', days: 'Wednesday', count: 1 },
+      { occasion: 'Ali Aye Ligang', month: 'February', dates: '18', days: 'Wednesday', count: 1 },
+      { occasion: 'Mahabir Jayanti', month: 'March', dates: '31', days: 'Tuesday', count: 1 },
+      { occasion: 'Tithi of Damodar Dev', month: 'April', dates: '18', days: 'Saturday', count: 1 },
+      { occasion: 'Sati Sadhani Divas', month: 'April', dates: '21', days: 'Tuesday', count: 1 },
+      { occasion: 'Tithi of Gopal Dev', month: 'April', dates: '22', days: 'Wednesday', count: 1 },
+      { occasion: 'Tithi of Hari Dev', month: 'May', dates: '16', days: 'Saturday', count: 1 },
+      { occasion: 'Janmotsab of Sri Sri Madhab Dev', month: 'June', dates: '1', days: 'Monday', count: 1 },
+      { occasion: 'Muharram', month: 'June', dates: '17', days: 'Wednesday', count: 1 },
+      { occasion: 'Death Anniversary of Bishnu Prasad Rabha', month: 'June', dates: '20', days: 'Saturday', count: 1 },
+      { occasion: 'Ambubasi Nibriti', month: '', dates: 'Date not fixed (as per Assamese calendar)', days: '', count: null },
+      { occasion: 'Fateha-E-Dwaz Daham', month: 'August', dates: '26', days: 'Wednesday', count: 1 },
+      { occasion: 'Biswakarma Puja', month: 'September', dates: '17', days: 'Thursday', count: 1 },
+      { occasion: 'Bhatri Dwitiya', month: 'November', dates: '11', days: 'Wednesday', count: 1 },
+      { occasion: 'Chhath Puja', month: 'November', dates: '15', days: 'Sunday', count: 1 },
+      { occasion: "Martyr's Day", month: 'December', dates: '10', days: 'Thursday', count: 1 },
+      { occasion: 'Christmas Eve', month: 'December', dates: '24', days: 'Thursday', count: 1 }
+    ];
+
+    function populateHolidayMonthFilter() {
+      const select = document.getElementById('holidayMonthFilter');
+
+      monthOrder.forEach(function(month) {
+        const hasEntries = holidays.some(function(h) { return h.month === month; }) ||
+          restrictedHolidays.some(function(h) { return h.month === month; });
+
+        if (hasEntries) {
+          const option = document.createElement('option');
+          option.value = month;
+          option.textContent = month;
+          select.appendChild(option);
+        }
+      });
+    }
+
+    function buildHolidayTable(list, includeAmbubasiNote) {
+      if (list.length === 0) {
+        return '<div class="empty">No holidays in this month.</div>';
+      }
+
+      const rows = list.map(function(h, index) {
+        return `
+          <tr>
+            <td>${index + 1}</td>
+            <td>${escapeHtml(h.occasion)}</td>
+            <td>${escapeHtml(h.month)}</td>
+            <td>${escapeHtml(h.dates)}</td>
+            <td>${escapeHtml(h.days)}</td>
+            <td>${h.count === null || h.count === undefined ? '—' : h.count}</td>
+          </tr>
+        `;
+      }).join('');
+
+      return `
+        <table>
+          <thead>
+            <tr>
+              <th>Sl.</th>
+              <th>Occasion</th>
+              <th>Month</th>
+              <th>Date(s)</th>
+              <th>Day(s)</th>
+              <th>No. of days</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function renderHolidays() {
+      const month = document.getElementById('holidayMonthFilter').value;
+
+      const filteredHolidays = month
+        ? holidays.filter(function(h) { return h.month === month; })
+        : holidays;
+
+      const filteredRestricted = month
+        ? restrictedHolidays.filter(function(h) { return h.month === month; })
+        : restrictedHolidays;
+
+      const totalDays = filteredHolidays.reduce(function(sum, h) {
+        return sum + (h.count || 0);
+      }, 0);
+
+      document.getElementById('holidaySummary').textContent =
+        filteredHolidays.length + ' holiday occasion' +
+        (filteredHolidays.length === 1 ? '' : 's') +
+        ' (' + totalDays + ' day' + (totalDays === 1 ? '' : 's') + ')' +
+        (month ? ' in ' + month : ' — Gauhati University, 2026');
+
+      document.getElementById('holidayTableContainer').innerHTML =
+        buildHolidayTable(filteredHolidays);
+
+      document.getElementById('restrictedHolidayTableContainer').innerHTML =
+        buildHolidayTable(filteredRestricted);
+    }
 
     // Fetch and parse the Google Sheet's gviz JSON feed
     function loadRoutineData() {
@@ -712,19 +893,35 @@
     function showFilteredView() {
       document.getElementById('filteredSection').classList.remove('hidden');
       document.getElementById('overallSection').classList.add('hidden');
+      document.getElementById('holidaySection').classList.add('hidden');
 
       document.getElementById('filteredViewButton').classList.add('active');
       document.getElementById('overallViewButton').classList.remove('active');
+      document.getElementById('holidayViewButton').classList.remove('active');
     }
 
     function showOverallView() {
       document.getElementById('filteredSection').classList.add('hidden');
       document.getElementById('overallSection').classList.remove('hidden');
+      document.getElementById('holidaySection').classList.add('hidden');
 
       document.getElementById('filteredViewButton').classList.remove('active');
       document.getElementById('overallViewButton').classList.add('active');
+      document.getElementById('holidayViewButton').classList.remove('active');
 
       renderOverallView();
+    }
+
+    function showHolidayView() {
+      document.getElementById('filteredSection').classList.add('hidden');
+      document.getElementById('overallSection').classList.add('hidden');
+      document.getElementById('holidaySection').classList.remove('hidden');
+
+      document.getElementById('filteredViewButton').classList.remove('active');
+      document.getElementById('overallViewButton').classList.remove('active');
+      document.getElementById('holidayViewButton').classList.add('active');
+
+      renderHolidays();
     }
 
     function clearFilters() {
@@ -747,6 +944,8 @@
       return div.innerHTML;
     }
 
+    populateHolidayMonthFilter();
+    renderHolidays();
     loadRoutineData();
   </script>
 </body>
