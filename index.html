@@ -212,6 +212,46 @@
       font-size: 13px;
     }
 
+    .add-mine-cell {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .add-mine-btn {
+      width: auto;
+      min-height: 32px;
+      padding: 0 12px;
+      font-size: 13px;
+      background: #dbeafe;
+      color: #123b70;
+    }
+
+    .add-mine-btn.added {
+      background: #22a35a;
+      color: #ffffff;
+    }
+
+    .remove-mine-btn {
+      width: auto;
+      min-height: 32px;
+      padding: 0 12px;
+      font-size: 13px;
+      background: #fde8e8;
+      color: #a3231f;
+    }
+
+    .my-classes-note {
+      margin: 8px 2px 14px;
+      color: #536174;
+      font-size: 14px;
+    }
+
+    .my-classes-actions {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+    }
+
     @media (max-width: 760px) {
       .filters {
         grid-template-columns: 1fr;
@@ -269,6 +309,13 @@
       >
         GU Holidays
       </button>
+
+      <button
+        id="myClassesViewButton"
+        onclick="showMyClassesView()"
+      >
+        My Classes
+      </button>
     </div>
 
     <section id="filteredSection">
@@ -316,6 +363,22 @@
       <div id="overallContainer">
         <div class="loading">Loading overall view…</div>
       </div>
+    </section>
+
+    <section id="myClassesSection" class="hidden">
+      <div class="my-classes-note">
+        Classes you've added here are saved only on this phone/browser — use "Filtered View" to find and add your classes.
+      </div>
+
+      <div class="my-classes-actions">
+        <button class="remove-mine-btn" onclick="clearMyClasses()">Clear all</button>
+      </div>
+
+      <section class="card">
+        <div id="myClassesContainer">
+          <div class="empty">You haven't added any classes yet. Go to "Filtered View", find your classes, and tap "Add to mine".</div>
+        </div>
+      </section>
     </section>
 
     <section id="holidaySection" class="hidden">
@@ -590,6 +653,117 @@
         });
     }
 
+    // ---- "My Classes" marking, stored only in this browser (localStorage) ----
+    const MY_CLASSES_KEY = 'pduamMyClasses';
+
+    function getMyClasses() {
+      try {
+        const raw = localStorage.getItem(MY_CLASSES_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveMyClasses(list) {
+      try {
+        localStorage.setItem(MY_CLASSES_KEY, JSON.stringify(list));
+      } catch (error) {
+        console.error('Could not save to this browser\'s storage.', error);
+      }
+    }
+
+    function rowKey(row) {
+      return [
+        row['Day'], row['Stream'], row['Class'], row['Time'],
+        row['Subject'], row['Period No']
+      ].join('||');
+    }
+
+    function isMyClass(row) {
+      return getMyClasses().some(function(saved) {
+        return saved.key === rowKey(row);
+      });
+    }
+
+    function addMyClass(row) {
+      const key = rowKey(row);
+      const current = getMyClasses();
+
+      if (current.some(function(saved) { return saved.key === key; })) {
+        return;
+      }
+
+      current.push({ key: key, row: row });
+      saveMyClasses(current);
+      renderTable();
+    }
+
+    function removeMyClass(key) {
+      const current = getMyClasses().filter(function(saved) {
+        return saved.key !== key;
+      });
+
+      saveMyClasses(current);
+      renderTable();
+      renderMyClasses();
+    }
+
+    function clearMyClasses() {
+      saveMyClasses([]);
+      renderTable();
+      renderMyClasses();
+    }
+
+    function renderMyClasses() {
+      const saved = getMyClasses();
+      const container = document.getElementById('myClassesContainer');
+
+      if (saved.length === 0) {
+        container.innerHTML =
+          '<div class="empty">You haven\'t added any classes yet. Go to "Filtered View", find your classes, and tap "Add to mine".</div>';
+        return;
+      }
+
+      const sortedRows = saved
+        .map(function(saved) { return saved.row; })
+        .sort(compareRoutineRows);
+
+      const rows = sortedRows.map(function(row) {
+        const key = rowKey(row);
+        return `
+          <tr>
+            <td>${escapeHtml(row['Stream'])}</td>
+            <td>${escapeHtml(row['Day'])}</td>
+            <td>${escapeHtml(row['Class'])}</td>
+            <td>${escapeHtml(row['Time'])}</td>
+            <td>${escapeHtml(row['Subject'])}</td>
+            <td>${escapeHtml(row['Period No'])}</td>
+            <td class="add-mine-cell">
+              <button class="remove-mine-btn" onclick="removeMyClass('${key.replace(/'/g, "\\'")}')">Remove</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Stream</th>
+              <th>Day</th>
+              <th>Class</th>
+              <th>Time</th>
+              <th>Subject</th>
+              <th>Period</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
     function getOrderIndex(order, value) {
       const index = order.indexOf(value);
       return index === -1 ? 9999 : index;
@@ -738,7 +912,12 @@
         return;
       }
 
-      const rows = filtered.map(function(row) {
+      // Kept on window so the inline "Add to mine" buttons can reference rows by index
+      window.currentFilteredRows = filtered;
+
+      const rows = filtered.map(function(row, index) {
+        const added = isMyClass(row);
+
         return `
           <tr>
             <td>${escapeHtml(row['Stream'])}</td>
@@ -747,6 +926,13 @@
             <td>${escapeHtml(row['Time'])}</td>
             <td>${escapeHtml(row['Subject'])}</td>
             <td>${escapeHtml(row['Period No'])}</td>
+            <td class="add-mine-cell">
+              <button
+                class="add-mine-btn${added ? ' added' : ''}"
+                onclick="addMyClass(window.currentFilteredRows[${index}])"
+                ${added ? 'disabled' : ''}
+              >${added ? 'Added ✓' : 'Add to mine'}</button>
+            </td>
           </tr>
         `;
       }).join('');
@@ -761,6 +947,7 @@
               <th>Time</th>
               <th>Subject</th>
               <th>Period</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>${rows}</tbody>
@@ -890,38 +1077,46 @@
       `;
     }
 
-    function showFilteredView() {
-      document.getElementById('filteredSection').classList.remove('hidden');
+    function hideAllSections() {
+      document.getElementById('filteredSection').classList.add('hidden');
       document.getElementById('overallSection').classList.add('hidden');
       document.getElementById('holidaySection').classList.add('hidden');
+      document.getElementById('myClassesSection').classList.add('hidden');
 
-      document.getElementById('filteredViewButton').classList.add('active');
+      document.getElementById('filteredViewButton').classList.remove('active');
       document.getElementById('overallViewButton').classList.remove('active');
       document.getElementById('holidayViewButton').classList.remove('active');
+      document.getElementById('myClassesViewButton').classList.remove('active');
+    }
+
+    function showFilteredView() {
+      hideAllSections();
+      document.getElementById('filteredSection').classList.remove('hidden');
+      document.getElementById('filteredViewButton').classList.add('active');
     }
 
     function showOverallView() {
-      document.getElementById('filteredSection').classList.add('hidden');
+      hideAllSections();
       document.getElementById('overallSection').classList.remove('hidden');
-      document.getElementById('holidaySection').classList.add('hidden');
-
-      document.getElementById('filteredViewButton').classList.remove('active');
       document.getElementById('overallViewButton').classList.add('active');
-      document.getElementById('holidayViewButton').classList.remove('active');
 
       renderOverallView();
     }
 
     function showHolidayView() {
-      document.getElementById('filteredSection').classList.add('hidden');
-      document.getElementById('overallSection').classList.add('hidden');
+      hideAllSections();
       document.getElementById('holidaySection').classList.remove('hidden');
-
-      document.getElementById('filteredViewButton').classList.remove('active');
-      document.getElementById('overallViewButton').classList.remove('active');
       document.getElementById('holidayViewButton').classList.add('active');
 
       renderHolidays();
+    }
+
+    function showMyClassesView() {
+      hideAllSections();
+      document.getElementById('myClassesSection').classList.remove('hidden');
+      document.getElementById('myClassesViewButton').classList.add('active');
+
+      renderMyClasses();
     }
 
     function clearFilters() {
