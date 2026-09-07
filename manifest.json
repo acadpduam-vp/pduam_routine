@@ -1,0 +1,22 @@
+{
+  "name": "PDUAM Class Routine",
+  "short_name": "PDUAM Routine",
+  "description": "Class routine, GU holiday list, and personal schedule for Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fb",
+  "theme_color": "#123b70",
+  "icons": [
+    {
+      "src": "rusa.jfif",
+      "sizes": "192x192",
+      "type": "image/jpeg"
+    },
+    {
+      "src": "rusa.jfif",
+      "sizes": "512x512",
+      "type": "image/jpeg"
+    }
+  ]
+}
