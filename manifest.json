@@ -9,12 +9,12 @@
   "theme_color": "#123b70",
   "icons": [
     {
-      "src": "rusa.jfif",
+      "src": "rusa.jpg",
       "sizes": "192x192",
       "type": "image/jpeg"
     },
     {
-      "src": "rusa.jfif",
+      "src": "rusa.jpg",
       "sizes": "512x512",
       "type": "image/jpeg"
     }
