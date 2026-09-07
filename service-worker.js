@@ -1,10 +1,12 @@
-const CACHE_NAME = 'pduam-routine-v2';
+const CACHE_NAME = 'pduam-routine-v3';
 
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.json',
-  './rusa.jpg'
+  './rusa.jpg',
+  './rusa-192.png',
+  './rusa-512.png'
 ];
 
 self.addEventListener('install', function(event) {
