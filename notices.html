@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123b70">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="rusa-192.png">
+  <title>Notices — Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f4f7fb;
+      color: #172033;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background: linear-gradient(135deg, #123b70, #1f6fb2);
+      color: #ffffff;
+      padding: 26px 20px;
+      text-align: center;
+    }
+
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+    }
+
+    .header-logo {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      background: #ffffff;
+      border-radius: 50%;
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    .header-text {
+      text-align: left;
+    }
+
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .header-subtitle {
+      margin: 0 0 2px;
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .header-tagline {
+      margin: 0;
+      opacity: 0.85;
+      font-size: 13px;
+    }
+
+    @media (max-width: 640px) {
+      .header-inner {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+
+      .header-text {
+        text-align: center;
+      }
+
+      header h1 {
+        font-size: 19px;
+      }
+
+      .header-logo {
+        width: 52px;
+        height: 52px;
+      }
+    }
+
+    main {
+      max-width: 900px;
+      margin: 28px auto;
+      padding: 0 16px 32px;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-bottom: 18px;
+      color: #1f6fb2;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+    }
+
+    .summary {
+      margin: 0 2px 18px;
+      color: #536174;
+      font-size: 14px;
+    }
+
+    .notice-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .notice-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .notice-title {
+      font-size: 16px;
+      font-weight: bold;
+      color: #123b70;
+    }
+
+    .notice-date {
+      font-size: 13px;
+      color: #6b7280;
+      white-space: nowrap;
+    }
+
+    .notice-file-link {
+      display: inline-block;
+      margin-top: 4px;
+      background: #1f6fb2;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: bold;
+      padding: 8px 14px;
+      border-radius: 8px;
+    }
+
+    .notice-file-link:hover {
+      background: #15578e;
+    }
+
+    .empty,
+    .loading {
+      padding: 30px;
+      text-align: center;
+      color: #6b7280;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="header-inner">
+      <img src="rusa.jpg" alt="RUSA logo" class="header-logo">
+      <div class="header-text">
+        <h1>Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya</h1>
+        <p class="header-subtitle">Amjonga, Goalpara, Assam &middot; Affiliated to Gauhati University</p>
+        <p class="header-tagline">Notices &amp; Circulars</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <a class="back-link" href="index.html">&larr; Back to Class Routine</a>
+
+    <div id="summary" class="summary">Loading notices…</div>
+
+    <div id="noticesContainer">
+      <div class="loading">Loading notices…</div>
+    </div>
+  </main>
+
+  <script>
+    // ---- CONFIG: this GitHub repo's "notices" folder ----
+    // To add a notice: upload a file to the notices/ folder in this repo,
+    // named like 2026-09-08_Title-Of-Notice.pdf — it will appear here automatically.
+    const GITHUB_OWNER = 'acadpduam-vp';
+    const GITHUB_REPO = 'pduam_routine';
+    const NOTICES_API_URL =
+      'https://api.github.com/repos/' + GITHUB_OWNER + '/' + GITHUB_REPO + '/contents/notices';
+
+    // Parses "2026-09-08_Title-Of-Notice.pdf" into a date and a clean title.
+    // Falls back gracefully if a file doesn't follow the naming pattern.
+    function parseNoticeFilename(filename) {
+      const match = filename.match(/^(\d{4}-\d{2}-\d{2})[_-]+(.+)\.[^.]+$/);
+
+      if (!match) {
+        return {
+          date: '',
+          sortKey: '0000-00-00',
+          title: filename.replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ')
+        };
+      }
+
+      const rawDate = match[1];
+      const rawTitle = match[2].replace(/[_-]+/g, ' ').trim();
+
+      const dateObj = new Date(rawDate + 'T00:00:00');
+      const displayDate = isNaN(dateObj.getTime())
+        ? rawDate
+        : dateObj.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+      return {
+        date: displayDate,
+        sortKey: rawDate,
+        title: rawTitle
+      };
+    }
+
+    function escapeHtml(value) {
+      const text = String(value === undefined || value === null ? '' : value);
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function renderNotices(notices) {
+      const container = document.getElementById('noticesContainer');
+
+      document.getElementById('summary').textContent =
+        notices.length + ' notice' + (notices.length === 1 ? '' : 's');
+
+      if (notices.length === 0) {
+        container.innerHTML =
+          '<div class="empty">No notices uploaded yet. Add a file to the "notices" folder in the GitHub repo to see it here.</div>';
+        return;
+      }
+
+      container.innerHTML = notices.map(function(notice) {
+        return `
+          <section class="notice-card">
+            <div class="notice-card-header">
+              <div class="notice-title">${escapeHtml(notice.title)}</div>
+              ${notice.date ? `<div class="notice-date">${escapeHtml(notice.date)}</div>` : ''}
+            </div>
+            <a class="notice-file-link" href="${notice.downloadUrl}" target="_blank" rel="noopener">View / Download</a>
+          </section>
+        `;
+      }).join('');
+    }
+
+    function loadNotices() {
+      fetch(NOTICES_API_URL)
+        .then(function(response) {
+          if (response.status === 404) {
+            // The "notices" folder doesn't exist yet (no files uploaded)
+            return [];
+          }
+          if (!response.ok) {
+            throw new Error('GitHub API returned ' + response.status);
+          }
+          return response.json();
+        })
+        .then(function(items) {
+          const files = (items || []).filter(function(item) {
+            return item.type === 'file';
+          });
+
+          const notices = files.map(function(file) {
+            const parsed = parseNoticeFilename(file.name);
+            return {
+              title: parsed.title,
+              date: parsed.date,
+              sortKey: parsed.sortKey,
+              downloadUrl: file.download_url
+            };
+          });
+
+          notices.sort(function(a, b) {
+            return b.sortKey.localeCompare(a.sortKey);
+          });
+
+          renderNotices(notices);
+        })
+        .catch(function(error) {
+          document.getElementById('summary').textContent = 'Unable to load notices.';
+          document.getElementById('noticesContainer').innerHTML =
+            '<div class="empty">Could not load notices right now. Please refresh, or check back later.</div>';
+          console.error(error);
+        });
+    }
+
+    loadNotices();
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function() {
+        navigator.serviceWorker.register('service-worker.js').catch(function(error) {
+          console.error('Service worker registration failed:', error);
+        });
+      });
+    }
+  </script>
+</body>
+</html>

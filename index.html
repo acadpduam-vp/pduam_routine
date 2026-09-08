@@ -113,6 +113,26 @@
       color: #ffffff;
     }
 
+    .view-buttons-link {
+      width: auto;
+      min-height: 42px;
+      padding: 0 20px;
+      background: #dbeafe;
+      color: #123b70;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .view-buttons-link:hover {
+      background: #c7deef;
+    }
+
     .filters {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -307,6 +327,148 @@
       margin-bottom: 12px;
     }
 
+    .syllabus-note {
+      margin: 8px 2px 14px;
+      color: #536174;
+      font-size: 14px;
+    }
+
+    .add-subject-form {
+      display: flex;
+      gap: 10px;
+      background: #ffffff;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
+      margin-bottom: 18px;
+    }
+
+    .add-subject-form input {
+      flex: 1;
+    }
+
+    .add-subject-form button {
+      width: auto;
+      padding: 0 18px;
+    }
+
+    .subject-card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
+      padding: 16px 18px;
+      margin-bottom: 16px;
+    }
+
+    .subject-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .subject-card-title {
+      font-size: 17px;
+      font-weight: bold;
+      color: #123b70;
+    }
+
+    .subject-progress {
+      font-size: 13px;
+      color: #536174;
+      background: #eaf2fb;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .progress-bar-track {
+      background: #e5eaf0;
+      border-radius: 999px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .progress-bar-fill {
+      background: #1f6fb2;
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    .topic-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .topic-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-top: 1px solid #eef1f5;
+    }
+
+    .topic-row:first-child {
+      border-top: none;
+    }
+
+    .topic-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      min-height: 0;
+      flex-shrink: 0;
+    }
+
+    .topic-text {
+      flex: 1;
+      font-size: 14px;
+    }
+
+    .topic-text.done {
+      text-decoration: line-through;
+      color: #9aa7b8;
+    }
+
+    .topic-remove-btn {
+      width: auto;
+      min-height: 28px;
+      padding: 0 10px;
+      font-size: 12px;
+      background: #fde8e8;
+      color: #a3231f;
+      flex-shrink: 0;
+    }
+
+    .add-topic-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .add-topic-row input {
+      flex: 1;
+      min-height: 36px;
+    }
+
+    .add-topic-row button {
+      width: auto;
+      min-height: 36px;
+      padding: 0 14px;
+      font-size: 13px;
+    }
+
+    .remove-subject-btn {
+      width: auto;
+      min-height: 32px;
+      padding: 0 12px;
+      font-size: 13px;
+      background: #fde8e8;
+      color: #a3231f;
+    }
+
     @media (max-width: 760px) {
       .filters {
         grid-template-columns: 1fr;
@@ -316,7 +478,8 @@
         flex-direction: column;
       }
 
-      .view-buttons button {
+      .view-buttons button,
+      .view-buttons-link {
         width: 100%;
       }
 
@@ -377,6 +540,21 @@
       >
         My Classes
       </button>
+
+      <button
+        id="mySyllabusViewButton"
+        onclick="showMySyllabusView()"
+      >
+        My Syllabus
+      </button>
+
+      <a
+        id="noticesViewButton"
+        href="notices.html"
+        class="view-buttons-link"
+      >
+        Notices
+      </a>
     </div>
 
     <section id="filteredSection">
@@ -440,6 +618,25 @@
           <div class="empty">You haven't added any classes yet. Go to "Filtered View", find your classes, and tap "Add to mine".</div>
         </div>
       </section>
+    </section>
+
+    <section id="mySyllabusSection" class="hidden">
+      <div class="syllabus-note">
+        This is a private list of what you teach — saved only on this phone/browser and visible only to you here.
+      </div>
+
+      <div class="add-subject-form">
+        <input
+          id="newSubjectInput"
+          type="text"
+          placeholder="Add a subject (e.g. Physics — HS 1st Year)"
+        >
+        <button onclick="addSubject()">Add subject</button>
+      </div>
+
+      <div id="mySyllabusContainer">
+        <div class="empty">No subjects added yet. Add one above, then add topics under it and check them off as you cover them.</div>
+      </div>
     </section>
 
     <section id="holidaySection" class="hidden">
@@ -830,6 +1027,166 @@
       return index === -1 ? 9999 : index;
     }
 
+    // ---- "My Syllabus" — a private list of what this person teaches,
+    // stored only in this browser (localStorage) ----
+    const MY_SYLLABUS_KEY = 'pduamMySyllabus';
+
+    function getMySyllabus() {
+      try {
+        const raw = localStorage.getItem(MY_SYLLABUS_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveMySyllabus(subjects) {
+      try {
+        localStorage.setItem(MY_SYLLABUS_KEY, JSON.stringify(subjects));
+      } catch (error) {
+        console.error('Could not save to this browser\'s storage.', error);
+      }
+    }
+
+    function newSyllabusId() {
+      return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+    }
+
+    function addSubject() {
+      const input = document.getElementById('newSubjectInput');
+      const name = input.value.trim();
+
+      if (!name) {
+        return;
+      }
+
+      const subjects = getMySyllabus();
+      subjects.push({ id: newSyllabusId(), name: name, topics: [] });
+      saveMySyllabus(subjects);
+
+      input.value = '';
+      renderMySyllabus();
+    }
+
+    function removeSubject(subjectId) {
+      const subjects = getMySyllabus().filter(function(subject) {
+        return subject.id !== subjectId;
+      });
+
+      saveMySyllabus(subjects);
+      renderMySyllabus();
+    }
+
+    function addTopic(subjectId) {
+      const input = document.getElementById('newTopicInput-' + subjectId);
+      const text = input.value.trim();
+
+      if (!text) {
+        return;
+      }
+
+      const subjects = getMySyllabus();
+      const subject = subjects.find(function(s) { return s.id === subjectId; });
+
+      if (subject) {
+        subject.topics.push({ id: newSyllabusId(), text: text, done: false });
+        saveMySyllabus(subjects);
+      }
+
+      renderMySyllabus();
+    }
+
+    function removeTopic(subjectId, topicId) {
+      const subjects = getMySyllabus();
+      const subject = subjects.find(function(s) { return s.id === subjectId; });
+
+      if (subject) {
+        subject.topics = subject.topics.filter(function(topic) {
+          return topic.id !== topicId;
+        });
+        saveMySyllabus(subjects);
+      }
+
+      renderMySyllabus();
+    }
+
+    function toggleTopic(subjectId, topicId) {
+      const subjects = getMySyllabus();
+      const subject = subjects.find(function(s) { return s.id === subjectId; });
+
+      if (subject) {
+        const topic = subject.topics.find(function(t) { return t.id === topicId; });
+
+        if (topic) {
+          topic.done = !topic.done;
+          saveMySyllabus(subjects);
+        }
+      }
+
+      renderMySyllabus();
+    }
+
+    function renderMySyllabus() {
+      const subjects = getMySyllabus();
+      const container = document.getElementById('mySyllabusContainer');
+
+      if (subjects.length === 0) {
+        container.innerHTML =
+          '<div class="empty">No subjects added yet. Add one above, then add topics under it and check them off as you cover them.</div>';
+        return;
+      }
+
+      container.innerHTML = subjects.map(function(subject) {
+        const total = subject.topics.length;
+        const doneCount = subject.topics.filter(function(t) { return t.done; }).length;
+        const percent = total === 0 ? 0 : Math.round((doneCount / total) * 100);
+
+        const topicRows = subject.topics.map(function(topic) {
+          return `
+            <li class="topic-row">
+              <input
+                type="checkbox"
+                ${topic.done ? 'checked' : ''}
+                onchange="toggleTopic('${subject.id}', '${topic.id}')"
+              >
+              <span class="topic-text${topic.done ? ' done' : ''}">${escapeHtml(topic.text)}</span>
+              <button class="topic-remove-btn" onclick="removeTopic('${subject.id}', '${topic.id}')">Remove</button>
+            </li>
+          `;
+        }).join('');
+
+        return `
+          <section class="subject-card">
+            <div class="subject-card-header">
+              <div class="subject-card-title">${escapeHtml(subject.name)}</div>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span class="subject-progress">${doneCount} / ${total} covered</span>
+                <button class="remove-subject-btn" onclick="removeSubject('${subject.id}')">Delete subject</button>
+              </div>
+            </div>
+
+            ${total > 0 ? `
+              <div class="progress-bar-track">
+                <div class="progress-bar-fill" style="width:${percent}%;"></div>
+              </div>
+            ` : ''}
+
+            <ul class="topic-list">${topicRows}</ul>
+
+            <div class="add-topic-row">
+              <input
+                id="newTopicInput-${subject.id}"
+                type="text"
+                placeholder="Add a topic/unit"
+                onkeydown="if(event.key === 'Enter') addTopic('${subject.id}')"
+              >
+              <button onclick="addTopic('${subject.id}')">Add topic</button>
+            </div>
+          </section>
+        `;
+      }).join('');
+    }
+
     function getUniqueValues(column) {
       const values = [...new Set(
         routine
@@ -1143,11 +1500,13 @@
       document.getElementById('overallSection').classList.add('hidden');
       document.getElementById('holidaySection').classList.add('hidden');
       document.getElementById('myClassesSection').classList.add('hidden');
+      document.getElementById('mySyllabusSection').classList.add('hidden');
 
       document.getElementById('filteredViewButton').classList.remove('active');
       document.getElementById('overallViewButton').classList.remove('active');
       document.getElementById('holidayViewButton').classList.remove('active');
       document.getElementById('myClassesViewButton').classList.remove('active');
+      document.getElementById('mySyllabusViewButton').classList.remove('active');
     }
 
     function showFilteredView() {
@@ -1178,6 +1537,14 @@
       document.getElementById('myClassesViewButton').classList.add('active');
 
       renderMyClasses();
+    }
+
+    function showMySyllabusView() {
+      hideAllSections();
+      document.getElementById('mySyllabusSection').classList.remove('hidden');
+      document.getElementById('mySyllabusViewButton').classList.add('active');
+
+      renderMySyllabus();
     }
 
     function clearFilters() {

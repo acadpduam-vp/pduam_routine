@@ -1,8 +1,9 @@
-const CACHE_NAME = 'pduam-routine-v3';
+const CACHE_NAME = 'pduam-routine-v5';
 
 const APP_SHELL = [
   './',
   './index.html',
+  './notices.html',
   './manifest.json',
   './rusa.jpg',
   './rusa-192.png',
@@ -34,9 +35,14 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('fetch', function(event) {
   const url = event.request.url;
 
-  // Live routine data (Google Sheets): try the network first so the data
-  // stays fresh, but fall back to the last successful copy if offline.
-  if (url.indexOf('docs.google.com') !== -1) {
+  // Live routine data (Google Sheets) and notices (GitHub API/files):
+  // try the network first so content stays fresh, but fall back to the
+  // last successful copy if offline.
+  if (
+    url.indexOf('docs.google.com') !== -1 ||
+    url.indexOf('api.github.com') !== -1 ||
+    url.indexOf('raw.githubusercontent.com') !== -1
+  ) {
     event.respondWith(
       fetch(event.request)
         .then(function(response) {
