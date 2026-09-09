@@ -95,6 +95,32 @@
       padding: 0 16px 32px;
     }
 
+    .cl-form-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: #fff8e1;
+      border: 1px solid #f6d772;
+      color: #7a5b00;
+      border-radius: 10px;
+      padding: 12px 18px;
+      margin-bottom: 16px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .cl-form-banner:hover {
+      background: #ffefc0;
+    }
+
+    .cl-form-banner-sub {
+      font-size: 12px;
+      font-weight: normal;
+      opacity: 0.8;
+    }
+
     .view-buttons {
       display: flex;
       gap: 10px;
@@ -511,6 +537,11 @@
   </header>
 
   <main>
+    <a class="cl-form-banner" href="cl-form.pdf" target="_blank" rel="noopener" download>
+      <span>📄 CL Form</span>
+      <span class="cl-form-banner-sub">Tap to download instantly</span>
+    </a>
+
     <div class="view-buttons">
       <button
         id="filteredViewButton"
@@ -554,6 +585,22 @@
         class="view-buttons-link"
       >
         Notices
+      </a>
+
+      <a
+        id="curriculumViewButton"
+        href="curriculum.html"
+        class="view-buttons-link"
+      >
+        Curriculum
+      </a>
+
+      <a
+        id="examViewButton"
+        href="exam.html"
+        class="view-buttons-link"
+      >
+        Exam
       </a>
     </div>
 

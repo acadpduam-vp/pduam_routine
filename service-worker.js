@@ -1,19 +1,32 @@
-const CACHE_NAME = 'pduam-routine-v5';
+const CACHE_NAME = 'pduam-routine-v6';
 
 const APP_SHELL = [
   './',
   './index.html',
   './notices.html',
+  './curriculum.html',
+  './exam.html',
+  './github-files.js',
   './manifest.json',
   './rusa.jpg',
   './rusa-192.png',
-  './rusa-512.png'
+  './rusa-512.png',
+  './cl-form.pdf'
 ];
 
 self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
-      return cache.addAll(APP_SHELL);
+      // Add files individually (not cache.addAll) so one missing/renamed
+      // file — like a notice PDF that hasn't been uploaded yet — doesn't
+      // block the whole offline cache from being set up.
+      return Promise.all(
+        APP_SHELL.map(function(url) {
+          return cache.add(url).catch(function(error) {
+            console.warn('Could not precache', url, error);
+          });
+        })
+      );
     })
   );
   self.skipWaiting();

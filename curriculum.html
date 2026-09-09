@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#123b70">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="rusa-192.png">
-  <title>Notices — Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya</title>
+  <title>Curriculum — Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya</title>
 
   <style>
     * {
@@ -28,7 +28,7 @@
     }
 
     .header-inner {
-      max-width: 1100px;
+      max-width: 900px;
       margin: 0 auto;
       display: flex;
       align-items: center;
@@ -90,7 +90,7 @@
     }
 
     main {
-      max-width: 1100px;
+      max-width: 900px;
       margin: 28px auto;
       padding: 0 16px 32px;
     }
@@ -108,11 +108,44 @@
       text-decoration: underline;
     }
 
-    .page-layout {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 24px;
-      align-items: start;
+    .syllabus-link-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: linear-gradient(135deg, #123b70, #1f6fb2);
+      color: #ffffff;
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 24px;
+      text-decoration: none;
+    }
+
+    .syllabus-link-text {
+      font-size: 17px;
+      font-weight: bold;
+    }
+
+    .syllabus-link-subtext {
+      font-size: 13px;
+      opacity: 0.85;
+      margin-top: 3px;
+      font-weight: normal;
+    }
+
+    .syllabus-link-arrow {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .syllabus-link-card:hover {
+      background: linear-gradient(135deg, #0e2c54, #15578e);
+    }
+
+    .section-heading {
+      margin: 8px 2px 14px;
+      color: #123b70;
+      font-size: 17px;
     }
 
     .summary {
@@ -172,56 +205,6 @@
       text-align: center;
       color: #6b7280;
     }
-
-    .side-panel {
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
-      overflow: hidden;
-    }
-
-    .side-panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 16px;
-      border-bottom: 1px solid #eef1f5;
-    }
-
-    .side-panel-title {
-      font-size: 15px;
-      font-weight: bold;
-      color: #123b70;
-    }
-
-    .side-panel-link {
-      font-size: 12px;
-      color: #1f6fb2;
-      text-decoration: none;
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .side-panel-link:hover {
-      text-decoration: underline;
-    }
-
-    .side-panel iframe {
-      width: 100%;
-      height: 640px;
-      border: none;
-      display: block;
-    }
-
-    @media (max-width: 900px) {
-      .page-layout {
-        grid-template-columns: 1fr;
-      }
-
-      .side-panel iframe {
-        height: 420px;
-      }
-    }
   </style>
 </head>
 
@@ -232,7 +215,7 @@
       <div class="header-text">
         <h1>Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya</h1>
         <p class="header-subtitle">Amjonga, Goalpara, Assam &middot; Affiliated to Gauhati University</p>
-        <p class="header-tagline">Notices &amp; Circulars</p>
+        <p class="header-tagline">Curriculum &amp; Course Resources</p>
       </div>
     </div>
   </header>
@@ -240,36 +223,30 @@
   <main>
     <a class="back-link" href="index.html">&larr; Back to Class Routine</a>
 
-    <div class="page-layout">
-      <div>
-        <div id="noticesSummary" class="summary">Loading notices…</div>
-        <div id="noticesContainer">
-          <div class="loading">Loading notices…</div>
-        </div>
-      </div>
+    <a
+      class="syllabus-link-card"
+      href="https://gauhati.ac.in/syllabus/"
+      target="_blank"
+      rel="noopener"
+    >
+      <span>
+        <span class="syllabus-link-text">Gauhati University Syllabus</span><br>
+        <span class="syllabus-link-subtext">Opens the official GU syllabus page in a new tab</span>
+      </span>
+      <span class="syllabus-link-arrow">↗</span>
+    </a>
 
-      <div class="side-panel">
-        <div class="side-panel-header">
-          <span class="side-panel-title">GU Notices</span>
-          <a
-            class="side-panel-link"
-            href="https://sites.google.com/a/gauhati.ac.in/notifications/college/examination"
-            target="_blank"
-            rel="noopener"
-          >Open in new tab ↗</a>
-        </div>
-        <iframe
-          src="https://sites.google.com/a/gauhati.ac.in/notifications/college/examination"
-          title="Gauhati University Examination Notifications"
-          loading="lazy"
-        ></iframe>
-      </div>
+    <div class="section-heading">Other Course Documents</div>
+    <div id="curriculumSummary" class="summary">Loading…</div>
+
+    <div id="curriculumContainer">
+      <div class="loading">Loading…</div>
     </div>
   </main>
 
   <script src="github-files.js"></script>
   <script>
-    loadFolderFiles('notices', 'noticesContainer', 'noticesSummary');
+    loadFolderFiles('curriculum', 'curriculumContainer', 'curriculumSummary');
 
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
