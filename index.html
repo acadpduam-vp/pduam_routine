@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#123b70">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="rusa-192.png">
-  <title>PDUAM Class Routine — Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya</title>
+  <title>PDUAM Amjonga — Home</title>
 
   <style>
     * {
@@ -90,7 +90,7 @@
     }
 
     main {
-      max-width: 1400px;
+      max-width: 900px;
       margin: 28px auto;
       padding: 0 16px 32px;
     }
@@ -105,7 +105,7 @@
       color: #7a5b00;
       border-radius: 10px;
       padding: 12px 18px;
-      margin-bottom: 16px;
+      margin-bottom: 22px;
       text-decoration: none;
       font-weight: bold;
       font-size: 15px;
@@ -121,405 +121,125 @@
       opacity: 0.8;
     }
 
-    .view-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 18px;
-    }
-
-    .view-buttons button {
-      width: auto;
-      padding: 0 20px;
-      background: #dbeafe;
-      color: #123b70;
-    }
-
-    .view-buttons button.active {
-      background: #1f6fb2;
-      color: #ffffff;
-    }
-
-    .view-buttons-link {
-      width: auto;
-      min-height: 42px;
-      padding: 0 20px;
-      background: #dbeafe;
-      color: #123b70;
-      border-radius: 8px;
-      font-size: 15px;
-      font-weight: bold;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-
-    .view-buttons-link:hover {
-      background: #c7deef;
-    }
-
-    .filters {
+    .nav-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      background: #ffffff;
-      padding: 18px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
-      margin-bottom: 22px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 30px;
     }
 
-    input,
-    select,
-    button {
-      width: 100%;
-      min-height: 42px;
-      border-radius: 8px;
-      font-size: 15px;
-    }
-
-    input,
-    select {
-      border: 1px solid #cbd5e1;
-      padding: 0 12px;
-      background: #ffffff;
-      color: #172033;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: #1f6fb2;
-      box-shadow: 0 0 0 3px rgba(31, 111, 178, 0.16);
-      outline: none;
-    }
-
-    button {
-      border: 0;
-      background: #1f6fb2;
-      color: #ffffff;
-      cursor: pointer;
-      font-weight: bold;
-      padding: 0 14px;
-    }
-
-    button:hover {
-      background: #15578e;
-    }
-
-    .summary {
-      margin: 8px 2px 14px;
-      color: #536174;
-      font-size: 14px;
-    }
-
-    .card {
+    .nav-card {
       background: #ffffff;
       border-radius: 12px;
-      overflow: hidden;
       box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
-      margin-bottom: 18px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th {
-      background: #eaf2fb;
+      padding: 20px 18px;
+      text-decoration: none;
       color: #123b70;
-      text-align: left;
-      padding: 13px 14px;
-      font-size: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
     }
 
-    td {
-      border-top: 1px solid #e5eaf0;
-      padding: 13px 14px;
-      font-size: 14px;
-      vertical-align: top;
+    .nav-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(20, 48, 84, 0.16);
     }
 
-    tr:hover td {
-      background: #f8fbff;
+    .nav-card-icon {
+      font-size: 26px;
     }
 
-    .empty,
-    .loading {
-      padding: 30px;
-      text-align: center;
+    .nav-card-title {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .nav-card-sub {
+      font-size: 12.5px;
       color: #6b7280;
     }
 
-    .hidden {
-      display: none;
+    @media (max-width: 560px) {
+      .nav-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
-    .overall-table-wrapper {
-      overflow-x: auto;
-    }
-
-    .overall-table {
-      min-width: 1200px;
-    }
-
-    .overall-table th {
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .overall-table td {
-      min-width: 135px;
-      text-align: center;
-    }
-
-    .overall-day-cell {
-      background: #f8fbff;
-      color: #123b70;
-      font-weight: bold;
-      white-space: nowrap;
-    }
-
-    .overall-class-cell {
-      min-width: 180px !important;
-      text-align: left !important;
-      line-height: 1.45;
-    }
-
-    .overall-subject-cell {
-      color: #172033;
-      font-weight: 600;
-      line-height: 1.4;
-    }
-
-    .overall-empty {
-      color: #9aa7b8;
-    }
-
-    .holiday-filters {
-      grid-template-columns: minmax(0, 260px);
-    }
-
-    .holiday-heading {
-      margin: 18px 2px 10px;
-      color: #123b70;
-      font-size: 17px;
-    }
-
-    .holiday-note {
-      margin: -4px 2px 12px;
-      color: #6b7280;
-      font-size: 13px;
-    }
-
-    .add-mine-cell {
-      text-align: center;
-      white-space: nowrap;
-    }
-
-    .add-mine-btn {
-      width: auto;
-      min-height: 32px;
-      padding: 0 12px;
-      font-size: 13px;
-      background: #dbeafe;
-      color: #123b70;
-    }
-
-    .add-mine-btn.added {
-      background: #22a35a;
-      color: #ffffff;
-    }
-
-    .remove-mine-btn {
-      width: auto;
-      min-height: 32px;
-      padding: 0 12px;
-      font-size: 13px;
-      background: #fde8e8;
-      color: #a3231f;
-    }
-
-    .my-classes-note {
-      margin: 8px 2px 14px;
-      color: #536174;
-      font-size: 14px;
-    }
-
-    .my-classes-actions {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 12px;
-    }
-
-    .syllabus-note {
-      margin: 8px 2px 14px;
-      color: #536174;
-      font-size: 14px;
-    }
-
-    .add-subject-form {
-      display: flex;
-      gap: 10px;
-      background: #ffffff;
-      padding: 16px;
-      border-radius: 12px;
-      box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
-      margin-bottom: 18px;
-    }
-
-    .add-subject-form input {
-      flex: 1;
-    }
-
-    .add-subject-form button {
-      width: auto;
-      padding: 0 18px;
-    }
-
-    .subject-card {
+    .section-card {
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 4px 16px rgba(20, 48, 84, 0.10);
-      padding: 16px 18px;
-      margin-bottom: 16px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
     }
 
-    .subject-card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-bottom: 12px;
-      flex-wrap: wrap;
-    }
-
-    .subject-card-title {
-      font-size: 17px;
-      font-weight: bold;
+    .section-card h2 {
+      margin: 0 0 10px;
       color: #123b70;
+      font-size: 16px;
     }
 
-    .subject-progress {
-      font-size: 13px;
-      color: #536174;
-      background: #eaf2fb;
-      padding: 4px 10px;
-      border-radius: 999px;
+    .section-card p {
+      margin: 0;
+      font-size: 14.5px;
+      line-height: 1.6;
+      color: #344054;
     }
 
-    .progress-bar-track {
-      background: #e5eaf0;
-      border-radius: 999px;
-      height: 8px;
-      overflow: hidden;
-      margin-bottom: 14px;
-    }
-
-    .progress-bar-fill {
-      background: #1f6fb2;
-      height: 100%;
-      border-radius: 999px;
-    }
-
-    .topic-list {
+    .links-list {
       list-style: none;
       margin: 0;
       padding: 0;
     }
 
-    .topic-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 0;
-      border-top: 1px solid #eef1f5;
+    .links-list li {
+      margin: 0;
     }
 
-    .topic-row:first-child {
+    .links-list a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-decoration: none;
+      color: #172033;
+      padding: 12px 4px;
+      border-top: 1px solid #eef1f5;
+      font-size: 14.5px;
+    }
+
+    .links-list li:first-child a {
       border-top: none;
     }
 
-    .topic-row input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      min-height: 0;
+    .links-list a:hover {
+      color: #1f6fb2;
+    }
+
+    .links-list .arrow {
+      color: #1f6fb2;
+      font-size: 16px;
       flex-shrink: 0;
     }
 
-    .topic-text {
-      flex: 1;
-      font-size: 14px;
-    }
-
-    .topic-text.done {
-      text-decoration: line-through;
-      color: #9aa7b8;
-    }
-
-    .topic-remove-btn {
-      width: auto;
-      min-height: 28px;
-      padding: 0 10px;
-      font-size: 12px;
-      background: #fde8e8;
-      color: #a3231f;
-      flex-shrink: 0;
-    }
-
-    .add-topic-row {
+    .contact-row {
       display: flex;
-      gap: 8px;
-      margin-top: 10px;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 14.5px;
+      color: #344054;
     }
 
-    .add-topic-row input {
-      flex: 1;
-      min-height: 36px;
+    .contact-row strong {
+      color: #123b70;
     }
 
-    .add-topic-row button {
-      width: auto;
-      min-height: 36px;
-      padding: 0 14px;
-      font-size: 13px;
-    }
-
-    .remove-subject-btn {
-      width: auto;
-      min-height: 32px;
-      padding: 0 12px;
-      font-size: 13px;
-      background: #fde8e8;
-      color: #a3231f;
-    }
-
-    @media (max-width: 760px) {
-      .filters {
-        grid-template-columns: 1fr;
-      }
-
-      .view-buttons {
-        flex-direction: column;
-      }
-
-      .view-buttons button,
-      .view-buttons-link {
-        width: 100%;
-      }
-
-      header h1 {
-        font-size: 23px;
-      }
-
-      .card {
-        overflow-x: auto;
-      }
-
-      table {
-        min-width: 640px;
-      }
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #9aa7b8;
+      font-size: 12.5px;
     }
   </style>
 </head>
@@ -531,7 +251,7 @@
       <div class="header-text">
         <h1>Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya</h1>
         <p class="header-subtitle">Amjonga, Goalpara, Assam &middot; Affiliated to Gauhati University</p>
-        <p class="header-tagline">Class Routine, Holidays &amp; Personal Schedule</p>
+        <p class="header-tagline">Student &amp; Faculty Information Portal</p>
       </div>
     </div>
   </header>
@@ -542,1084 +262,78 @@
       <span class="cl-form-banner-sub">Tap to download instantly</span>
     </a>
 
-    <div class="view-buttons">
-      <button
-        id="filteredViewButton"
-        class="active"
-        onclick="showFilteredView()"
-      >
-        Filtered View
-      </button>
-
-      <button
-        id="overallViewButton"
-        onclick="showOverallView()"
-      >
-        Overall View
-      </button>
-
-      <button
-        id="holidayViewButton"
-        onclick="showHolidayView()"
-      >
-        GU Holidays
-      </button>
-
-      <button
-        id="myClassesViewButton"
-        onclick="showMyClassesView()"
-      >
-        My Classes
-      </button>
-
-      <button
-        id="mySyllabusViewButton"
-        onclick="showMySyllabusView()"
-      >
-        My Syllabus
-      </button>
-
-      <a
-        id="noticesViewButton"
-        href="notices.html"
-        class="view-buttons-link"
-      >
-        Notices
+    <div class="nav-grid">
+      <a class="nav-card" href="routine.html">
+        <span class="nav-card-icon">🗓️</span>
+        <span class="nav-card-title">Class Routine</span>
+        <span class="nav-card-sub">Filtered &amp; overall views, GU holidays, your own classes and syllabus</span>
       </a>
 
-      <a
-        id="curriculumViewButton"
-        href="curriculum.html"
-        class="view-buttons-link"
-      >
-        Curriculum
+      <a class="nav-card" href="notices.html">
+        <span class="nav-card-icon">📢</span>
+        <span class="nav-card-title">Notices</span>
+        <span class="nav-card-sub">College notices and a link to GU notices</span>
       </a>
 
-      <a
-        id="examViewButton"
-        href="exam.html"
-        class="view-buttons-link"
-      >
-        Exam
+      <a class="nav-card" href="curriculum.html">
+        <span class="nav-card-icon">📘</span>
+        <span class="nav-card-title">Curriculum</span>
+        <span class="nav-card-sub">GU syllabus and course documents</span>
+      </a>
+
+      <a class="nav-card" href="exam.html">
+        <span class="nav-card-icon">📝</span>
+        <span class="nav-card-title">Examinations</span>
+        <span class="nav-card-sub">Internal, Final &amp; Zone documents</span>
       </a>
     </div>
 
-    <section id="filteredSection">
-      <section class="filters">
-        <select id="streamFilter" onchange="renderTable()">
-          <option value="">All Streams</option>
-        </select>
-
-        <select id="dayFilter" onchange="renderTable()">
-          <option value="">All Days</option>
-        </select>
-
-        <select id="classFilter" onchange="renderTable()">
-          <option value="">All Classes</option>
-        </select>
-
-        <select id="timeFilter" onchange="renderTable()">
-          <option value="">All Time Slots</option>
-        </select>
-
-        <input
-          id="searchFilter"
-          type="search"
-          placeholder="Search subject or time"
-          oninput="renderTable()"
-        >
-
-        <button onclick="clearFilters()">Clear filters</button>
-      </section>
-
-      <div id="summary" class="summary">Loading routine…</div>
-
-      <section class="card">
-        <div id="tableContainer" class="loading">
-          Loading routine data…
-        </div>
-      </section>
-    </section>
-
-    <section id="overallSection" class="hidden">
-      <div class="summary">
-        Complete routine: Day, Class, and subjects by time slot
-      </div>
-
-      <div id="overallContainer">
-        <div class="loading">Loading overall view…</div>
-      </div>
-    </section>
-
-    <section id="myClassesSection" class="hidden">
-      <div class="my-classes-note">
-        Classes you've added here are saved only on this phone/browser — use "Filtered View" to find and add your classes.
-      </div>
-
-      <div class="my-classes-actions">
-        <button class="remove-mine-btn" onclick="clearMyClasses()">Clear all</button>
-      </div>
-
-      <section class="card">
-        <div id="myClassesContainer">
-          <div class="empty">You haven't added any classes yet. Go to "Filtered View", find your classes, and tap "Add to mine".</div>
-        </div>
-      </section>
-    </section>
-
-    <section id="mySyllabusSection" class="hidden">
-      <div class="syllabus-note">
-        This is a private list of what you teach — saved only on this phone/browser and visible only to you here.
-      </div>
-
-      <div class="add-subject-form">
-        <input
-          id="newSubjectInput"
-          type="text"
-          placeholder="Add a subject (e.g. Physics — HS 1st Year)"
-        >
-        <button onclick="addSubject()">Add subject</button>
-      </div>
-
-      <div id="mySyllabusContainer">
-        <div class="empty">No subjects added yet. Add one above, then add topics under it and check them off as you cover them.</div>
-      </div>
-    </section>
-
-    <section id="holidaySection" class="hidden">
-      <section class="filters holiday-filters">
-        <select id="holidayMonthFilter" onchange="renderHolidays()">
-          <option value="">All Months</option>
-        </select>
-      </section>
-
-      <div id="holidaySummary" class="summary"></div>
-
-      <h3 class="holiday-heading">Holidays</h3>
-      <section class="card">
-        <div id="holidayTableContainer"></div>
-      </section>
-
-      <h3 class="holiday-heading">Restricted Holidays</h3>
-      <p class="holiday-note">
-        Each employee may avail any 3 of the following as restricted holidays, with prior approval.
+    <section class="section-card">
+      <h2>About the College</h2>
+      <p>
+        Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya (PDUAM), Amjonga is a Government model
+        college established in 2017 under the Rashtriya Uchchatar Shiksha Abhiyan (RUSA), affiliated
+        to Gauhati University. The college offers Higher Secondary (HS) courses under AHSEC and the
+        Four Year Undergraduate Programme (FYUGP) under NEP 2020.
       </p>
-      <section class="card">
-        <div id="restrictedHolidayTableContainer"></div>
-      </section>
+    </section>
+
+    <section class="section-card">
+      <h2>Purpose of this Site</h2>
+      <p>
+        This site gives students and faculty quick, mobile-friendly access to the class routine, GU
+        holiday list, notices, curriculum resources, and examination documents — all in one place.
+      </p>
+    </section>
+
+    <section class="section-card">
+      <h2>Important Links</h2>
+      <ul class="links-list">
+        <li><a href="https://pduamamjonga.ac.in/" target="_blank" rel="noopener"><span>College Website</span><span class="arrow">↗</span></a></li>
+        <li><a href="https://library.pduamamjonga.ac.in/" target="_blank" rel="noopener"><span>Library Website</span><span class="arrow">↗</span></a></li>
+        <li><a href="https://gauhati.ac.in/" target="_blank" rel="noopener"><span>Gauhati University</span><span class="arrow">↗</span></a></li>
+        <li><a href="https://gauhati.samarth.edu.in/index.php/site/login" target="_blank" rel="noopener"><span>Gauhati University Samarth Portal (Students)</span><span class="arrow">↗</span></a></li>
+        <li><a href="https://gauhati.samarth.ac.in/index.php/site/login" target="_blank" rel="noopener"><span>Gauhati University Samarth Portal</span><span class="arrow">↗</span></a></li>
+        <li><a href="https://assam.samarth.ac.in/index.php/site/login" target="_blank" rel="noopener"><span>Assam Samarth Portal</span><span class="arrow">↗</span></a></li>
+        <li><a href="https://assamadmission.samarth.ac.in/index.php/site" target="_blank" rel="noopener"><span>Assam Samarth Admission Portal</span><span class="arrow">↗</span></a></li>
+      </ul>
+    </section>
+
+    <section class="section-card">
+      <h2>Contact</h2>
+      <div class="contact-row">
+        <span><strong>Hari</strong> &middot; Vice Principal</span>
+        <span>📞 +91-7002318878</span>
+        <span>✉️ acadpduam@gmail.com</span>
+      </div>
     </section>
   </main>
 
+  <footer>
+    Pandit Deendayal Upadhyaya Adarsha Mahavidyalaya, Amjonga, Goalpara, Assam
+  </footer>
+
   <script>
-    // ---- CONFIG: your Google Sheet ----
-    const SHEET_ID = '1LA8RyTCExRt50IBV6gIS6F6LzJ5gF4Ev1VeFegDLf4o';
-    const SHEET_GID = '1084020770'; // the "Routine" tab
-    const DATA_URL =
-      'https://docs.google.com/spreadsheets/d/' + SHEET_ID +
-      '/gviz/tq?tqx=out:json&gid=' + SHEET_GID;
-
-    let routine = [];
-
-    const dayOrder = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday'
-    ];
-
-    const timeOrder = [
-      '9 AM–10 AM',
-      '10 AM–11 AM',
-      '11 AM–12 PM',
-      '12 PM–1 PM',
-      '1 PM–2 PM',
-      '2 PM–3 PM',
-      '3 PM–4 PM'
-    ];
-
-    const classOrder = [
-      'HS 1st Year',
-      'HS 2nd Year',
-
-      'BA 1st Semester',
-      'BSc 1st Semester',
-
-
-      'BA 3rd Semester',
-      'BSc 3rd Semester',
-
-
-      'BA 5th Semester',
-      'BSc 5th Semester'
-
-    ];
-
-    // ---- GU Holiday List for 2026 (Office of the Registrar, GU) ----
-    const monthOrder = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-
-    const holidays = [
-      { occasion: 'Magh Bihu', month: 'January', dates: '13, 14 & 15', days: 'Tuesday, Wednesday & Thursday', count: 3 },
-      { occasion: 'Saraswati Puja', month: 'January', dates: '23', days: 'Friday', count: 1 },
-      { occasion: 'Republic Day / G.U. Foundation Day', month: 'January', dates: '26', days: 'Monday', count: 1 },
-      { occasion: 'Gwther Bathau San', month: 'January', dates: '27', days: 'Tuesday', count: 1 },
-      { occasion: 'Me-Dam-Me-phi', month: 'January', dates: '31', days: 'Saturday', count: 1 },
-      { occasion: 'Bir Chilaray Divas', month: 'February', dates: '1', days: 'Sunday', count: 1 },
-      { occasion: 'Sivaratri', month: 'February', dates: '15', days: 'Sunday', count: 1 },
-      { occasion: 'Khring Khring Baithow Puja', month: 'March', dates: '2', days: 'Monday', count: 1 },
-      { occasion: 'Dol Jatra', month: 'March', dates: '3', days: 'Tuesday', count: 1 },
-      { occasion: 'Id-Ul-Fitre', month: 'March', dates: '21 & 22', days: 'Saturday & Sunday', count: 2 },
-      { occasion: 'Good Friday', month: 'April', dates: '3', days: 'Friday', count: 1 },
-      { occasion: 'Bohag Bihu', month: 'April', dates: '14, 15 & 16', days: 'Tuesday, Wednesday & Thursday', count: 3 },
-      { occasion: 'May Day / Buddha Purnima', month: 'May', dates: '1', days: 'Friday', count: 1 },
-      { occasion: 'Id-Uz-Zuha', month: 'May', dates: '27 & 28', days: 'Wednesday & Thursday', count: 2 },
-      { occasion: 'Independence Day', month: 'August', dates: '15', days: 'Saturday', count: 1 },
-      { occasion: 'Tirubhav Tithi of Sri Sri Madhabdeva', month: 'September', dates: '1', days: 'Tuesday', count: 1 },
-      { occasion: 'Janmastomi', month: 'September', dates: '4', days: 'Friday', count: 1 },
-      { occasion: 'Tirubhav Tithi of Sri Sri Sankardev', month: 'September', dates: '12', days: 'Saturday', count: 1 },
-      { occasion: 'Janmostav of Sri Sri Sankardev', month: 'September', dates: '21', days: 'Monday', count: 1 },
-      { occasion: 'Birthday of Mahatma Gandhi', month: 'October', dates: '2', days: 'Friday', count: 1 },
-      { occasion: 'Durga Puja, Kati Bihu & Lakhsmi Puja', month: 'October', dates: '17 to 25', days: 'Saturday to Sunday', count: 9 },
-      { occasion: 'Kali Puja & Dipawali', month: 'November', dates: '8', days: 'Sunday', count: 1 },
-      { occasion: "Guru Nanak's Birthday & Lachit Divas", month: 'November', dates: '24', days: 'Tuesday', count: 1 },
-      { occasion: 'Asom Divas (Su-ka-Pha Divas)', month: 'December', dates: '2', days: 'Wednesday', count: 1 },
-      { occasion: 'Christmas Day', month: 'December', dates: '25', days: 'Friday', count: 1 }
-    ];
-
-    const restrictedHolidays = [
-      { occasion: "New Year's Day", month: 'January', dates: '1', days: 'Thursday', count: 1 },
-      { occasion: 'Silpi Divas', month: 'January', dates: '17', days: 'Saturday', count: 1 },
-      { occasion: 'Shab-E-Barat', month: 'February', dates: '4', days: 'Wednesday', count: 1 },
-      { occasion: 'Ali Aye Ligang', month: 'February', dates: '18', days: 'Wednesday', count: 1 },
-      { occasion: 'Mahabir Jayanti', month: 'March', dates: '31', days: 'Tuesday', count: 1 },
-      { occasion: 'Tithi of Damodar Dev', month: 'April', dates: '18', days: 'Saturday', count: 1 },
-      { occasion: 'Sati Sadhani Divas', month: 'April', dates: '21', days: 'Tuesday', count: 1 },
-      { occasion: 'Tithi of Gopal Dev', month: 'April', dates: '22', days: 'Wednesday', count: 1 },
-      { occasion: 'Tithi of Hari Dev', month: 'May', dates: '16', days: 'Saturday', count: 1 },
-      { occasion: 'Janmotsab of Sri Sri Madhab Dev', month: 'June', dates: '1', days: 'Monday', count: 1 },
-      { occasion: 'Muharram', month: 'June', dates: '17', days: 'Wednesday', count: 1 },
-      { occasion: 'Death Anniversary of Bishnu Prasad Rabha', month: 'June', dates: '20', days: 'Saturday', count: 1 },
-      { occasion: 'Ambubasi Nibriti', month: '', dates: 'Date not fixed (as per Assamese calendar)', days: '', count: null },
-      { occasion: 'Fateha-E-Dwaz Daham', month: 'August', dates: '26', days: 'Wednesday', count: 1 },
-      { occasion: 'Biswakarma Puja', month: 'September', dates: '17', days: 'Thursday', count: 1 },
-      { occasion: 'Bhatri Dwitiya', month: 'November', dates: '11', days: 'Wednesday', count: 1 },
-      { occasion: 'Chhath Puja', month: 'November', dates: '15', days: 'Sunday', count: 1 },
-      { occasion: "Martyr's Day", month: 'December', dates: '10', days: 'Thursday', count: 1 },
-      { occasion: 'Christmas Eve', month: 'December', dates: '24', days: 'Thursday', count: 1 }
-    ];
-
-    function populateHolidayMonthFilter() {
-      const select = document.getElementById('holidayMonthFilter');
-
-      monthOrder.forEach(function(month) {
-        const hasEntries = holidays.some(function(h) { return h.month === month; }) ||
-          restrictedHolidays.some(function(h) { return h.month === month; });
-
-        if (hasEntries) {
-          const option = document.createElement('option');
-          option.value = month;
-          option.textContent = month;
-          select.appendChild(option);
-        }
-      });
-    }
-
-    function buildHolidayTable(list, includeAmbubasiNote) {
-      if (list.length === 0) {
-        return '<div class="empty">No holidays in this month.</div>';
-      }
-
-      const rows = list.map(function(h, index) {
-        return `
-          <tr>
-            <td>${index + 1}</td>
-            <td>${escapeHtml(h.occasion)}</td>
-            <td>${escapeHtml(h.month)}</td>
-            <td>${escapeHtml(h.dates)}</td>
-            <td>${escapeHtml(h.days)}</td>
-            <td>${h.count === null || h.count === undefined ? '—' : h.count}</td>
-          </tr>
-        `;
-      }).join('');
-
-      return `
-        <table>
-          <thead>
-            <tr>
-              <th>Sl.</th>
-              <th>Occasion</th>
-              <th>Month</th>
-              <th>Date(s)</th>
-              <th>Day(s)</th>
-              <th>No. of days</th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `;
-    }
-
-    function renderHolidays() {
-      const month = document.getElementById('holidayMonthFilter').value;
-
-      const filteredHolidays = month
-        ? holidays.filter(function(h) { return h.month === month; })
-        : holidays;
-
-      const filteredRestricted = month
-        ? restrictedHolidays.filter(function(h) { return h.month === month; })
-        : restrictedHolidays;
-
-      const totalDays = filteredHolidays.reduce(function(sum, h) {
-        return sum + (h.count || 0);
-      }, 0);
-
-      document.getElementById('holidaySummary').textContent =
-        filteredHolidays.length + ' holiday occasion' +
-        (filteredHolidays.length === 1 ? '' : 's') +
-        ' (' + totalDays + ' day' + (totalDays === 1 ? '' : 's') + ')' +
-        (month ? ' in ' + month : ' — Gauhati University, 2026');
-
-      document.getElementById('holidayTableContainer').innerHTML =
-        buildHolidayTable(filteredHolidays);
-
-      document.getElementById('restrictedHolidayTableContainer').innerHTML =
-        buildHolidayTable(filteredRestricted);
-    }
-
-    // Fetch and parse the Google Sheet's gviz JSON feed
-    function loadRoutineData() {
-      fetch(DATA_URL)
-        .then(function(response) {
-          if (!response.ok) {
-            throw new Error('Network response was not ok (' + response.status + ')');
-          }
-          return response.text();
-        })
-        .then(function(text) {
-          routine = parseGvizResponse(text);
-          populateFilters();
-          renderTable();
-          renderOverallView();
-        })
-        .catch(function(error) {
-          document.getElementById('summary').textContent =
-            'Unable to load routine data.';
-
-          document.getElementById('tableContainer').innerHTML =
-            '<div class="empty">Could not load the routine. Make sure the Google Sheet is shared as "Anyone with the link – Viewer", then refresh.</div>';
-
-          document.getElementById('overallContainer').innerHTML =
-            '<div class="empty">Could not load the overall routine.</div>';
-
-          console.error(error);
-        });
-    }
-
-    // Google's gviz endpoint wraps JSON in a JS callback like:
-    // google.visualization.Query.setResponse({...});
-    function parseGvizResponse(text) {
-      const start = text.indexOf('{');
-      const end = text.lastIndexOf('}');
-      const json = JSON.parse(text.substring(start, end + 1));
-
-      const cols = json.table.cols.map(function(col) {
-        return col.label || col.id;
-      });
-
-      const rows = json.table.rows || [];
-
-      return rows
-        .map(function(row) {
-          const record = {};
-
-          cols.forEach(function(colName, index) {
-            const cell = row.c[index];
-            const value = cell
-              ? (cell.f !== undefined && cell.f !== null ? cell.f : cell.v)
-              : '';
-
-            record[colName] = value === null || value === undefined
-              ? ''
-              : String(value);
-          });
-
-          return record;
-        })
-        .filter(function(record) {
-          return Object.values(record).some(function(value) {
-            return value !== '';
-          });
-        });
-    }
-
-    // ---- "My Classes" marking, stored only in this browser (localStorage) ----
-    const MY_CLASSES_KEY = 'pduamMyClasses';
-
-    function getMyClasses() {
-      try {
-        const raw = localStorage.getItem(MY_CLASSES_KEY);
-        return raw ? JSON.parse(raw) : [];
-      } catch (error) {
-        return [];
-      }
-    }
-
-    function saveMyClasses(list) {
-      try {
-        localStorage.setItem(MY_CLASSES_KEY, JSON.stringify(list));
-      } catch (error) {
-        console.error('Could not save to this browser\'s storage.', error);
-      }
-    }
-
-    function rowKey(row) {
-      return [
-        row['Day'], row['Stream'], row['Class'], row['Time'],
-        row['Subject'], row['Period No']
-      ].join('||');
-    }
-
-    function isMyClass(row) {
-      return getMyClasses().some(function(saved) {
-        return saved.key === rowKey(row);
-      });
-    }
-
-    function addMyClass(row) {
-      const key = rowKey(row);
-      const current = getMyClasses();
-
-      if (current.some(function(saved) { return saved.key === key; })) {
-        return;
-      }
-
-      current.push({ key: key, row: row });
-      saveMyClasses(current);
-      renderTable();
-    }
-
-    function removeMyClass(key) {
-      const current = getMyClasses().filter(function(saved) {
-        return saved.key !== key;
-      });
-
-      saveMyClasses(current);
-      renderTable();
-      renderMyClasses();
-    }
-
-    function clearMyClasses() {
-      saveMyClasses([]);
-      renderTable();
-      renderMyClasses();
-    }
-
-    function renderMyClasses() {
-      const saved = getMyClasses();
-      const container = document.getElementById('myClassesContainer');
-
-      if (saved.length === 0) {
-        container.innerHTML =
-          '<div class="empty">You haven\'t added any classes yet. Go to "Filtered View", find your classes, and tap "Add to mine".</div>';
-        return;
-      }
-
-      const sortedRows = saved
-        .map(function(saved) { return saved.row; })
-        .sort(compareRoutineRows);
-
-      const rows = sortedRows.map(function(row) {
-        const key = rowKey(row);
-        return `
-          <tr>
-            <td>${escapeHtml(row['Stream'])}</td>
-            <td>${escapeHtml(row['Day'])}</td>
-            <td>${escapeHtml(row['Class'])}</td>
-            <td>${escapeHtml(row['Time'])}</td>
-            <td>${escapeHtml(row['Subject'])}</td>
-            <td>${escapeHtml(row['Period No'])}</td>
-            <td class="add-mine-cell">
-              <button class="remove-mine-btn" onclick="removeMyClass('${key.replace(/'/g, "\\'")}')">Remove</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      container.innerHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>Stream</th>
-              <th>Day</th>
-              <th>Class</th>
-              <th>Time</th>
-              <th>Subject</th>
-              <th>Period</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `;
-    }
-
-    function getOrderIndex(order, value) {
-      const index = order.indexOf(value);
-      return index === -1 ? 9999 : index;
-    }
-
-    // ---- "My Syllabus" — a private list of what this person teaches,
-    // stored only in this browser (localStorage) ----
-    const MY_SYLLABUS_KEY = 'pduamMySyllabus';
-
-    function getMySyllabus() {
-      try {
-        const raw = localStorage.getItem(MY_SYLLABUS_KEY);
-        return raw ? JSON.parse(raw) : [];
-      } catch (error) {
-        return [];
-      }
-    }
-
-    function saveMySyllabus(subjects) {
-      try {
-        localStorage.setItem(MY_SYLLABUS_KEY, JSON.stringify(subjects));
-      } catch (error) {
-        console.error('Could not save to this browser\'s storage.', error);
-      }
-    }
-
-    function newSyllabusId() {
-      return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-    }
-
-    function addSubject() {
-      const input = document.getElementById('newSubjectInput');
-      const name = input.value.trim();
-
-      if (!name) {
-        return;
-      }
-
-      const subjects = getMySyllabus();
-      subjects.push({ id: newSyllabusId(), name: name, topics: [] });
-      saveMySyllabus(subjects);
-
-      input.value = '';
-      renderMySyllabus();
-    }
-
-    function removeSubject(subjectId) {
-      const subjects = getMySyllabus().filter(function(subject) {
-        return subject.id !== subjectId;
-      });
-
-      saveMySyllabus(subjects);
-      renderMySyllabus();
-    }
-
-    function addTopic(subjectId) {
-      const input = document.getElementById('newTopicInput-' + subjectId);
-      const text = input.value.trim();
-
-      if (!text) {
-        return;
-      }
-
-      const subjects = getMySyllabus();
-      const subject = subjects.find(function(s) { return s.id === subjectId; });
-
-      if (subject) {
-        subject.topics.push({ id: newSyllabusId(), text: text, done: false });
-        saveMySyllabus(subjects);
-      }
-
-      renderMySyllabus();
-    }
-
-    function removeTopic(subjectId, topicId) {
-      const subjects = getMySyllabus();
-      const subject = subjects.find(function(s) { return s.id === subjectId; });
-
-      if (subject) {
-        subject.topics = subject.topics.filter(function(topic) {
-          return topic.id !== topicId;
-        });
-        saveMySyllabus(subjects);
-      }
-
-      renderMySyllabus();
-    }
-
-    function toggleTopic(subjectId, topicId) {
-      const subjects = getMySyllabus();
-      const subject = subjects.find(function(s) { return s.id === subjectId; });
-
-      if (subject) {
-        const topic = subject.topics.find(function(t) { return t.id === topicId; });
-
-        if (topic) {
-          topic.done = !topic.done;
-          saveMySyllabus(subjects);
-        }
-      }
-
-      renderMySyllabus();
-    }
-
-    function renderMySyllabus() {
-      const subjects = getMySyllabus();
-      const container = document.getElementById('mySyllabusContainer');
-
-      if (subjects.length === 0) {
-        container.innerHTML =
-          '<div class="empty">No subjects added yet. Add one above, then add topics under it and check them off as you cover them.</div>';
-        return;
-      }
-
-      container.innerHTML = subjects.map(function(subject) {
-        const total = subject.topics.length;
-        const doneCount = subject.topics.filter(function(t) { return t.done; }).length;
-        const percent = total === 0 ? 0 : Math.round((doneCount / total) * 100);
-
-        const topicRows = subject.topics.map(function(topic) {
-          return `
-            <li class="topic-row">
-              <input
-                type="checkbox"
-                ${topic.done ? 'checked' : ''}
-                onchange="toggleTopic('${subject.id}', '${topic.id}')"
-              >
-              <span class="topic-text${topic.done ? ' done' : ''}">${escapeHtml(topic.text)}</span>
-              <button class="topic-remove-btn" onclick="removeTopic('${subject.id}', '${topic.id}')">Remove</button>
-            </li>
-          `;
-        }).join('');
-
-        return `
-          <section class="subject-card">
-            <div class="subject-card-header">
-              <div class="subject-card-title">${escapeHtml(subject.name)}</div>
-              <div style="display:flex; align-items:center; gap:10px;">
-                <span class="subject-progress">${doneCount} / ${total} covered</span>
-                <button class="remove-subject-btn" onclick="removeSubject('${subject.id}')">Delete subject</button>
-              </div>
-            </div>
-
-            ${total > 0 ? `
-              <div class="progress-bar-track">
-                <div class="progress-bar-fill" style="width:${percent}%;"></div>
-              </div>
-            ` : ''}
-
-            <ul class="topic-list">${topicRows}</ul>
-
-            <div class="add-topic-row">
-              <input
-                id="newTopicInput-${subject.id}"
-                type="text"
-                placeholder="Add a topic/unit"
-                onkeydown="if(event.key === 'Enter') addTopic('${subject.id}')"
-              >
-              <button onclick="addTopic('${subject.id}')">Add topic</button>
-            </div>
-          </section>
-        `;
-      }).join('');
-    }
-
-    function getUniqueValues(column) {
-      const values = [...new Set(
-        routine
-          .map(function(row) {
-            return row[column];
-          })
-          .filter(function(value) {
-            return value && String(value).trim() !== '';
-          })
-      )];
-
-      if (column === 'Day') {
-        return values.sort(function(a, b) {
-          return getOrderIndex(dayOrder, a) - getOrderIndex(dayOrder, b);
-        });
-      }
-
-      if (column === 'Time') {
-        return values.sort(function(a, b) {
-          return getOrderIndex(timeOrder, a) - getOrderIndex(timeOrder, b);
-        });
-      }
-
-      if (column === 'Class') {
-        return values.sort(function(a, b) {
-          const indexA = getOrderIndex(classOrder, a);
-          const indexB = getOrderIndex(classOrder, b);
-
-          if (indexA !== indexB) {
-            return indexA - indexB;
-          }
-
-          return a.localeCompare(b, undefined, {
-            numeric: true,
-            sensitivity: 'base'
-          });
-        });
-      }
-
-      return values.sort(function(a, b) {
-        return a.localeCompare(b, undefined, {
-          numeric: true,
-          sensitivity: 'base'
-        });
-      });
-    }
-
-    function fillSelect(id, column) {
-      const select = document.getElementById(id);
-
-      getUniqueValues(column).forEach(function(value) {
-        const option = document.createElement('option');
-        option.value = value;
-        option.textContent = value;
-        select.appendChild(option);
-      });
-    }
-
-    function populateFilters() {
-      fillSelect('streamFilter', 'Stream');
-      fillSelect('dayFilter', 'Day');
-      fillSelect('classFilter', 'Class');
-      fillSelect('timeFilter', 'Time');
-    }
-
-    function compareRoutineRows(a, b) {
-      const dayDifference =
-        getOrderIndex(dayOrder, a['Day']) -
-        getOrderIndex(dayOrder, b['Day']);
-
-      if (dayDifference !== 0) {
-        return dayDifference;
-      }
-
-      const classDifference =
-        getOrderIndex(classOrder, a['Class']) -
-        getOrderIndex(classOrder, b['Class']);
-
-      if (classDifference !== 0) {
-        return classDifference;
-      }
-
-      const streamDifference = String(a['Stream']).localeCompare(
-        String(b['Stream']),
-        undefined,
-        { numeric: true, sensitivity: 'base' }
-      );
-
-      if (streamDifference !== 0) {
-        return streamDifference;
-      }
-
-      return getOrderIndex(timeOrder, a['Time']) -
-        getOrderIndex(timeOrder, b['Time']);
-    }
-
-    function renderTable() {
-      const stream = document.getElementById('streamFilter').value;
-      const day = document.getElementById('dayFilter').value;
-      const className = document.getElementById('classFilter').value;
-      const time = document.getElementById('timeFilter').value;
-      const search = document.getElementById('searchFilter').value
-        .toLowerCase()
-        .trim();
-
-      const filtered = routine
-        .filter(function(row) {
-          const matchesStream = !stream || row['Stream'] === stream;
-          const matchesDay = !day || row['Day'] === day;
-          const matchesClass = !className || row['Class'] === className;
-          const matchesTime = !time || row['Time'] === time;
-
-          const searchText = [
-            row['Subject'],
-            row['Time'],
-            row['Day'],
-            row['Stream'],
-            row['Class'],
-            row['Period No']
-          ].join(' ').toLowerCase();
-
-          const matchesSearch = !search || searchText.includes(search);
-
-          return matchesStream &&
-            matchesDay &&
-            matchesClass &&
-            matchesTime &&
-            matchesSearch;
-        })
-        .sort(compareRoutineRows);
-
-      document.getElementById('summary').textContent =
-        filtered.length +
-        ' routine record' +
-        (filtered.length === 1 ? '' : 's') +
-        ' found';
-
-      if (filtered.length === 0) {
-        document.getElementById('tableContainer').innerHTML =
-          '<div class="empty">No routine matches the selected filters.</div>';
-        return;
-      }
-
-      // Kept on window so the inline "Add to mine" buttons can reference rows by index
-      window.currentFilteredRows = filtered;
-
-      const rows = filtered.map(function(row, index) {
-        const added = isMyClass(row);
-
-        return `
-          <tr>
-            <td>${escapeHtml(row['Stream'])}</td>
-            <td>${escapeHtml(row['Day'])}</td>
-            <td>${escapeHtml(row['Class'])}</td>
-            <td>${escapeHtml(row['Time'])}</td>
-            <td>${escapeHtml(row['Subject'])}</td>
-            <td>${escapeHtml(row['Period No'])}</td>
-            <td class="add-mine-cell">
-              <button
-                class="add-mine-btn${added ? ' added' : ''}"
-                onclick="addMyClass(window.currentFilteredRows[${index}])"
-                ${added ? 'disabled' : ''}
-              >${added ? 'Added ✓' : 'Add to mine'}</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      document.getElementById('tableContainer').innerHTML = `
-        <table>
-          <thead>
-            <tr>
-              <th>Stream</th>
-              <th>Day</th>
-              <th>Class</th>
-              <th>Time</th>
-              <th>Subject</th>
-              <th>Period</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>${rows}</tbody>
-        </table>
-      `;
-    }
-
-    function renderOverallView() {
-      const sorted = [...routine].sort(compareRoutineRows);
-
-      if (!sorted.length) {
-        document.getElementById('overallContainer').innerHTML =
-          '<div class="empty">No routine data found.</div>';
-        return;
-      }
-
-      const days = [...new Set(
-        sorted.map(function(row) {
-          return row['Day'];
-        })
-      )].sort(function(a, b) {
-        return getOrderIndex(dayOrder, a) - getOrderIndex(dayOrder, b);
-      });
-
-      const times = [...new Set(
-        sorted.map(function(row) {
-          return row['Time'];
-        })
-      )].sort(function(a, b) {
-        return getOrderIndex(timeOrder, a) - getOrderIndex(timeOrder, b);
-      });
-
-      const classGroups = [...new Set(
-        sorted.map(function(row) {
-          return row['Stream'] + '|||' + row['Class'];
-        })
-      )].sort(function(a, b) {
-        const partsA = a.split('|||');
-        const partsB = b.split('|||');
-
-        const streamA = partsA[0];
-        const classA = partsA[1];
-        const streamB = partsB[0];
-        const classB = partsB[1];
-
-        const classDifference =
-          getOrderIndex(classOrder, classA) -
-          getOrderIndex(classOrder, classB);
-
-        if (classDifference !== 0) {
-          return classDifference;
-        }
-
-        return streamA.localeCompare(streamB, undefined, {
-          numeric: true,
-          sensitivity: 'base'
-        });
-      });
-
-      const headerCells = times.map(function(time) {
-        return `<th>${escapeHtml(time)}</th>`;
-      }).join('');
-
-      let rows = '';
-
-      days.forEach(function(day) {
-        classGroups.forEach(function(group) {
-          const parts = group.split('|||');
-          const stream = parts[0];
-          const className = parts[1];
-
-          const timeCells = times.map(function(time) {
-            const matchingRows = sorted.filter(function(row) {
-              return row['Day'] === day &&
-                row['Stream'] === stream &&
-                row['Class'] === className &&
-                row['Time'] === time;
-            });
-
-            if (matchingRows.length === 0) {
-              return '<td class="overall-empty">—</td>';
-            }
-
-            const subjects = matchingRows.map(function(row) {
-              return `
-                <div class="overall-subject-cell">
-                  ${escapeHtml(row['Subject'])}
-                </div>
-              `;
-            }).join('');
-
-            return `<td>${subjects}</td>`;
-          }).join('');
-
-          rows += `
-            <tr>
-              <td class="overall-day-cell">
-                ${escapeHtml(day)}
-              </td>
-
-              <td class="overall-class-cell">
-                <strong>${escapeHtml(stream)}</strong><br>
-                ${escapeHtml(className)}
-              </td>
-
-              ${timeCells}
-            </tr>
-          `;
-        });
-      });
-
-      document.getElementById('overallContainer').innerHTML = `
-        <section class="card overall-table-wrapper">
-          <table class="overall-table">
-            <thead>
-              <tr>
-                <th>Day</th>
-                <th>Class</th>
-                ${headerCells}
-              </tr>
-            </thead>
-            <tbody>
-              ${rows}
-            </tbody>
-          </table>
-        </section>
-      `;
-    }
-
-    function hideAllSections() {
-      document.getElementById('filteredSection').classList.add('hidden');
-      document.getElementById('overallSection').classList.add('hidden');
-      document.getElementById('holidaySection').classList.add('hidden');
-      document.getElementById('myClassesSection').classList.add('hidden');
-      document.getElementById('mySyllabusSection').classList.add('hidden');
-
-      document.getElementById('filteredViewButton').classList.remove('active');
-      document.getElementById('overallViewButton').classList.remove('active');
-      document.getElementById('holidayViewButton').classList.remove('active');
-      document.getElementById('myClassesViewButton').classList.remove('active');
-      document.getElementById('mySyllabusViewButton').classList.remove('active');
-    }
-
-    function showFilteredView() {
-      hideAllSections();
-      document.getElementById('filteredSection').classList.remove('hidden');
-      document.getElementById('filteredViewButton').classList.add('active');
-    }
-
-    function showOverallView() {
-      hideAllSections();
-      document.getElementById('overallSection').classList.remove('hidden');
-      document.getElementById('overallViewButton').classList.add('active');
-
-      renderOverallView();
-    }
-
-    function showHolidayView() {
-      hideAllSections();
-      document.getElementById('holidaySection').classList.remove('hidden');
-      document.getElementById('holidayViewButton').classList.add('active');
-
-      renderHolidays();
-    }
-
-    function showMyClassesView() {
-      hideAllSections();
-      document.getElementById('myClassesSection').classList.remove('hidden');
-      document.getElementById('myClassesViewButton').classList.add('active');
-
-      renderMyClasses();
-    }
-
-    function showMySyllabusView() {
-      hideAllSections();
-      document.getElementById('mySyllabusSection').classList.remove('hidden');
-      document.getElementById('mySyllabusViewButton').classList.add('active');
-
-      renderMySyllabus();
-    }
-
-    function clearFilters() {
-      document.getElementById('streamFilter').value = '';
-      document.getElementById('dayFilter').value = '';
-      document.getElementById('classFilter').value = '';
-      document.getElementById('timeFilter').value = '';
-      document.getElementById('searchFilter').value = '';
-
-      renderTable();
-    }
-
-    function escapeHtml(value) {
-      const text = String(
-        value === undefined || value === null ? '' : value
-      );
-
-      const div = document.createElement('div');
-      div.textContent = text;
-      return div.innerHTML;
-    }
-
-    populateHolidayMonthFilter();
-    renderHolidays();
-    loadRoutineData();
-
-    // Register the service worker so the page can be installed and cache
-    // itself for offline/poor-signal use.
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', function() {
         navigator.serviceWorker.register('service-worker.js').catch(function(error) {

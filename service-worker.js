@@ -1,8 +1,9 @@
-const CACHE_NAME = 'pduam-routine-v6';
+const CACHE_NAME = 'pduam-routine-v7';
 
 const APP_SHELL = [
   './',
   './index.html',
+  './routine.html',
   './notices.html',
   './curriculum.html',
   './exam.html',
@@ -18,8 +19,7 @@ self.addEventListener('install', function(event) {
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       // Add files individually (not cache.addAll) so one missing/renamed
-      // file — like a notice PDF that hasn't been uploaded yet — doesn't
-      // block the whole offline cache from being set up.
+      // file doesn't block the whole offline cache from being set up.
       return Promise.all(
         APP_SHELL.map(function(url) {
           return cache.add(url).catch(function(error) {
